@@ -23,17 +23,17 @@ class Jugador(pygame.sprite.Sprite):
 
     def RetPos(self):
         x = self.rect.x
-        y = self.rect.y
+        y = self.rect.y - 20
         return [x,y]
 
     def update(self):
         self.rect.x += self.velx
-        #self.rect.y += self.vely
+        self.rect.y += self.vely
 
 class Rival(pygame.sprite.Sprite):
     def __init__ (self,pos):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([60,60])
+        self.image = pygame.Surface([50,50])
         self.image.fill(AMARILLO)
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
@@ -42,7 +42,9 @@ class Rival(pygame.sprite.Sprite):
         self.vely = 0
 
     def update(self):
-        self.rect.x += self.velx
+        #self.rect.x += self.velx
+        #self.rect.y += self.vely
+        pass
 
 class Bala(pygame.sprite.Sprite):
     def __init__ (self,pos):
@@ -58,28 +60,31 @@ class Bala(pygame.sprite.Sprite):
         self.rect.y += self.vely
 
 if __name__ == '__main__':
+    pygame.init()
     ventana=pygame.display.set_mode([ANCHO,ALTO])
     #Grupos
     jugadores = pygame.sprite.Group()
     rivales = pygame.sprite.Group()
     balas = pygame.sprite.Group()
 
-    j=Jugador([200,200])
+    j=Jugador([300,200])
     jugadores.add(j)
 
     n=10
     for i in range(n):
-        x = random.randrange(0,(ANCHO-60))
-        y = random.randrange(0,(ALTO-100))
-        vx = random.randrange(2,10)
+        x = random.randrange(ANCHO)
+        y = random.randrange((ALTO-150))
+        vx = random.randrange(10)
         r = Rival([x,y])
         r.velx = vx
         rivales.add(r)
 
+    ptos = 0
     reloj = pygame.time.Clock()
     fin = False
 
     while not fin:
+        #Gestion de eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 fin = True
@@ -106,10 +111,18 @@ if __name__ == '__main__':
                 balas.add(b)
 
         #Control
-        ls_obj = pygame.sprite.spritecollide(j,rivales,True)
+        if j.rect.x > ANCHO:
+            j.rect.x = 0 - j.rect.width
+
+        #Colision
+        ls_col = pygame.sprite.spritecollide(j,rivales,True)
+        for e in ls_col:
+            ptos += 1
+        #print (ptos)
 
         #Limpieza de memoria
         for b in balas:
+            ls_r = pygame.sprite.spritecollide(b,rivales,True)
             if b.rect.y < -50:
                 balas.remove(b)
 
