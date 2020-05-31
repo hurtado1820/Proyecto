@@ -1,7 +1,19 @@
 [info]
 fondo:fondo.png
 texturas:terrenogen.png
-mapa:......####...
-     ###.......###
-     .............
+mapa:.....####...
+     .##.......###
+     ....#.........
      .....##.....#
+
+[.]
+tipo:pasto
+colision:0
+tf:0
+tc:0
+
+[#]
+tipo:muro
+colision:1
+tf:0
+tc:0
