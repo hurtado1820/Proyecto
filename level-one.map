@@ -70,3 +70,111 @@ tipo: plataforma
 
 [6]
 tipo: plataforma
+
+[7]
+tipo: muro
+
+[8]
+tipo: muro
+
+[9]
+tipo: muro
+
+[a]
+tipo: muro
+
+[b]
+tipo: muro
+
+[c]
+tipo: muro
+
+[d]
+tipo: suelo
+
+[e]
+tipo: suelo
+
+[f]
+tipo: suelo
+
+[g]
+tipo: plataforma
+
+[h]
+tipo: plataforma
+
+[i]
+tipo: plataforma
+
+[j]
+tipo: muro
+
+[k]
+tipo: muro
+
+[l]
+tipo: muro
+
+[m]
+tipo: muro
+
+[n]
+tipo: muro
+
+[o]
+tipo: muro
+
+[1]
+tipo: suelo
+
+[2]
+tipo: suelo
+
+[3]
+tipo: suelo
+
+[4]
+tipo: plataforma
+
+[5]
+tipo: plataforma
+
+[6]
+tipo: plataforma
+
+[7]
+tipo: muro
+
+[8]
+tipo: muro
+
+[9]
+tipo: muro
+
+[a]
+tipo: muro
+
+[b]
+tipo: muro
+
+[p]
+tipo: pincho
+
+[q]
+tipo: pincho
+
+[r]
+tipo: pincho
+
+[s]
+tipo: pincho
+
+[t]
+tipo: puente
+
+[u]
+tipo: puente
+
+[v]
+tipo: puente
