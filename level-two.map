@@ -52,129 +52,80 @@ mapa: 00000000000000000000000000000000000000000000000000000000000000000000000000
       777777777777777777777777777777777777900000000008777777777777777777777777777777777777777777777777777
 [0]
 tipo: vacio
+spr:0
 
 [1]
 tipo: suelo
+spr:1
 
 [2]
 tipo: suelo
+spr:2
 
 [3]
 tipo: suelo
-
-[4]
-tipo: plataforma
-
-[5]
-tipo: plataforma
-
-[6]
-tipo: plataforma
+spr:3
 
 [7]
 tipo: muro
+spr:7
 
 [8]
 tipo: muro
+spr:8
 
 [9]
 tipo: muro
-
-[a]
-tipo: muro
-
-[b]
-tipo: muro
-
-[c]
-tipo: muro
+spr:9
 
 [d]
 tipo: suelo
+spr:13
 
 [e]
 tipo: suelo
+spr:14
 
 [f]
 tipo: suelo
+spr:15
 
 [g]
 tipo: plataforma
+spr:16
 
 [h]
 tipo: plataforma
+spr:17
 
 [i]
 tipo: plataforma
+spr:18
 
 [j]
 tipo: muro
+spr:19
 
 [k]
 tipo: muro
+spr:20
 
 [l]
 tipo: muro
-
-[m]
-tipo: muro
-
-[n]
-tipo: muro
+spr:21
 
 [o]
 tipo: muro
-
-[1]
-tipo: suelo
-
-[2]
-tipo: suelo
-
-[3]
-tipo: suelo
-
-[4]
-tipo: plataforma
-
-[5]
-tipo: plataforma
-
-[6]
-tipo: plataforma
-
-[7]
-tipo: muro
-
-[8]
-tipo: muro
-
-[9]
-tipo: muro
-
-[a]
-tipo: muro
-
-[b]
-tipo: muro
-
-[p]
-tipo: pincho
-
-[q]
-tipo: pincho
-
-[r]
-tipo: pincho
-
-[s]
-tipo: pincho
+spr:24
 
 [t]
 tipo: puente
+spr:29
 
 [u]
 tipo: puente
+spr:30
 
 [v]
 tipo: puente
+spr:31
