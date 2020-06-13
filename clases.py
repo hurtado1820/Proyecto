@@ -3,7 +3,7 @@ from enemigo import *
 from const import *
 import random
 
-#el jefe 2 es un generador, que no sirve D:
+#el jefe 2 es un generador, por eso está en este archivo :p
 class Jefe2(Enemigo):
     def __init__ (self,pos):#m
         pygame.sprite.Sprite.__init__(self)
@@ -33,7 +33,7 @@ class Jefe2(Enemigo):
         if self.vidas <= 0:
             self.estado = 2
 
-#el enemigo2 es un generador, por esto no tiene su propio archivo
+#el enemigo2 también es un generador
 class Enemigo2(Enemigo):
    def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
@@ -78,8 +78,7 @@ class Generador(pygame.sprite.Sprite):
        self.temp -= 1
        self.rect.x += self.f_velxs
 
-#misiles del enemigo estático 2
-
+#misiles del enemigo2
 class Misil(pygame.sprite.Sprite):
     def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
@@ -98,7 +97,6 @@ class Misil(pygame.sprite.Sprite):
         self.rect.x += self.f_velxs
 
 #balas del jugador
-
 class Bala(pygame.sprite.Sprite):
     def __init__ (self,pos):
         pygame.sprite.Sprite.__init__(self)

@@ -3,6 +3,7 @@ from clases import *
 from const import *
 from enemigo3 import *
 from enemigo4 import *
+from modificadores import *
 import pygame
 import random
 
@@ -19,6 +20,8 @@ if __name__ == '__main__':
     gen = pygame.sprite.Group()
     balas = pygame.sprite.Group()
     plataformas = pygame.sprite.Group()
+    boost = pygame.sprite.Group()
+    health = pygame.sprite.Group()
 
     j = Jugador([50,100])
     jugadores.add(j)
@@ -32,6 +35,13 @@ if __name__ == '__main__':
     #generadores
     g=Generador([900,100])
     gen.add(g)
+
+    #modificadores
+    v = Boost([200,565])
+    boost.add(v)
+    s = Salud([560,345])
+    health.add(s)
+
 
     p2 = Plataforma([400,250])
     plataformas.add(p2)
@@ -49,7 +59,6 @@ if __name__ == '__main__':
     fin=False
     while not fin:
         #movimiento del jugador
-        j.aturdir()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 fin = True
@@ -58,6 +67,9 @@ if __name__ == '__main__':
                     if j.estado == 1:
                         j.velx = 5
                         j.dir = 1
+                    if j.estado == 2:
+                        j.velx = 7
+                        j.dir = 1
                     if j.estado == 4:
                         j.velx = 2
                         j.dir=1
@@ -65,12 +77,17 @@ if __name__ == '__main__':
                     if j.estado == 1:
                         j.velx = -5
                         j.dir = 2
+                    if j.estado == 2:
+                        j.velx = -7
+                        j.dir = 2
                     if j.estado == 4:
                         j.velx = -2
                         j.dir= 2
                 if event.key == pygame.K_SPACE:
                     if j.estado == 1:
                         j.vely = -15
+                    if j.estado == 2:
+                        j.vely = -18
                     if j.estado == 4:
                         j.vely = -10
                     j.piso = False
@@ -104,7 +121,6 @@ if __name__ == '__main__':
                     elif direccion < 250:
                         o.velx = -5
                     ondas.add(o)
-                    print("objeto")
                     jf2.temp = random.randrange(100)
 
             for g in gen:
@@ -173,6 +189,21 @@ if __name__ == '__main__':
                     print("vidas = ", j.vidas)
                     r4.vidas -= 1
 
+            #recoger modificadores
+            speed = pygame.sprite.spritecollide(v,jugadores,False)
+            sal = pygame.sprite.spritecollide(s,jugadores,False)
+
+            if speed:
+                boost.remove(v)
+                j.inventario[2] += 1
+                j.mayo_rakuin()
+            if sal:
+                health.remove(s)
+                j.vidas += s.poder
+                s.poder = 0
+                j.velx *= -1
+                print("vidas = ", j.vidas)
+
             for pi in piedras:
                 if pi.rect.bottom > ALTO:
                     piedras.remove(pi)
@@ -200,6 +231,7 @@ if __name__ == '__main__':
                         j.aturdido = 1
                         ondas.remove(o)
                         o.damage = 0
+                j.aturdir()
 
             for r3 in rivales3:
                 r3.morir()
@@ -233,6 +265,8 @@ if __name__ == '__main__':
             piedras.draw(ventana)
             gen.draw(ventana)
             balas.draw(ventana)
+            boost.draw(ventana)
+            health.draw(ventana)
             jugadores.draw(ventana)
             jefe2.draw(ventana)
             plataformas.draw(ventana)

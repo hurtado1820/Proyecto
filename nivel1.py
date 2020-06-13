@@ -3,6 +3,7 @@ from clases import *
 from const import *
 from enemigo1 import *
 from jefe1 import *
+from modificadores import *
 import pygame
 import random
 
@@ -17,6 +18,8 @@ if __name__ == '__main__':
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
     misiles = pygame.sprite.Group()
+    pistola = pygame.sprite.Group()
+    tiempo = pygame.sprite.Group()
     jefe = pygame.sprite.Group()
 
     #Creacion personajes
@@ -26,8 +29,6 @@ if __name__ == '__main__':
     rivales1.add(r1)
     r2 = Enemigo2([750,570])
     rivales2.add(r2)
-
-    #el jefe solo se crea, no tiene comportamiento
     jf = Jefe1([815,280])
     jefe.add(jf)
 
@@ -40,6 +41,12 @@ if __name__ == '__main__':
     plataformas.add(p3)
     p4 = Plataforma([300,100])
     plataformas.add(p4)
+
+    #modificadores
+    gun = Pistola([250,585])
+    pistola.add(gun)
+    t = Tiempo([950,585])
+    tiempo.add(t)
 
     #gravedad
     j.plataformas = plataformas
@@ -70,17 +77,20 @@ if __name__ == '__main__':
                     j.piso = False
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
-                    pos = j.RetPos()
-                    b = Bala(pos)
-                    if j.dir == 1:
-                        b.velx = 15
-                        b.vely = 0
-                        #j.accion = 3
-                    if j.dir == 2:
-                        b.velx = -15
-                        b.vely = 0
-                        #j.accion = 7
-                    balas.add(b)
+                    if j.arma == 1:
+                        pos = j.RetPos()
+                        b = Bala(pos)
+                        if j.dir == 1:
+                            b.velx = 15
+                            b.vely = 0
+                            #j.accion = 3
+                        if j.dir == 2:
+                            b.velx = -15
+                            b.vely = 0
+                            #j.accion = 7
+                        balas.add(b)
+                    else:
+                        print("no tiene arma")
             if event.type == pygame.KEYUP:
                 j.velx = 0
 
@@ -136,6 +146,16 @@ if __name__ == '__main__':
                 j.vidas -= jf.damage
                 print("vidas = ", j.vidas)
 
+        #recoger modificadores
+        ars = pygame.sprite.spritecollide(gun,jugadores,False)
+        tie = pygame.sprite.spritecollide(t,jugadores,False)
+
+        if ars:
+            pistola.remove(gun)
+            j.arma = 1
+        if tie:
+            tiempo.remove(t)
+
         #control de muerte de los rivales
         for r1 in rivales1:
             r1.morir()
@@ -149,7 +169,7 @@ if __name__ == '__main__':
                 temp = -1
             if r2.temp < 0:
                 m = Misil(r2.rect)
-                m.velx = -5
+                m.velx = 5
                 misiles.add(m)
                 r2.temp = random.randrange(100)
 
@@ -192,5 +212,7 @@ if __name__ == '__main__':
         balas.draw(ventana)
         jugadores.draw(ventana)
         plataformas.draw(ventana)
+        pistola.draw(ventana)
+        tiempo.draw(ventana)
         jefe.draw(ventana)
         pygame.display.flip()

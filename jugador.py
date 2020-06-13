@@ -19,7 +19,7 @@ class Jugador(pygame.sprite.Sprite):
         self.vely = 0
         self.vidas = 5
         self.aturdido = 0
-        #self.arma = 0
+        self.arma = 0
         self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 aturdido, 5 muerto
         self.bloques = None
         self.pared = None
