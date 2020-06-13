@@ -96,17 +96,16 @@ if __name__ == '__main__':
                     jefe2.remove(jf2)
                     jf2.damage = 0
                     g.estado = 2
-                else:
-                    if jf2.temp < 0:
-                        direccion = random.randrange(250)
-                        o = Onda(jf2.rect)
-                        if direccion < 125:
-                            o.velx = 5
-                        elif direccion < 250:
-                            o.velx = -5
-                        ondas.add(o)
-                        #print("objeto")
-                        jf2.temp = random.randrange(100)
+                if jf2.temp < 0:
+                    direccion = random.randrange(250)
+                    o = Onda(jf2.rect)
+                    if direccion < 125:
+                        o.velx = 5
+                    elif direccion < 250:
+                        o.velx = -5
+                    ondas.add(o)
+                    print("objeto")
+                    jf2.temp = random.randrange(100)
 
             for g in gen:
                 if g.estado == 1:
@@ -143,7 +142,7 @@ if __name__ == '__main__':
                         balas.remove(b)
                 for o in ondas:
                     ondas.remove(o)
-                    m.damage = 0
+                    o.damage = 0
                     balas.remove(b)
                 for pi in piedras:
                     piedras.remove(pi)
@@ -191,9 +190,9 @@ if __name__ == '__main__':
 
             for o in ondas:
                 if o.rect.x < 0 or o.rect.x > ANCHO:
-                    j.remove(o)
+                    ondas.remove(o)
                     o.damage = 0
-                on = pygame.sprite.spritecollide(on,jugadores,False)
+                on = pygame.sprite.spritecollide(o,jugadores,False)
                 if on:
                     if o.damage > 0:
                         impacto = True
@@ -224,6 +223,7 @@ if __name__ == '__main__':
             piedras.update()
             rivales3.update()
             rivales4.update()
+            jefe2.update()
             gen.update()
             plataformas.update()
             ventana.fill(NEGRO)
