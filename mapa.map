@@ -1,0 +1,19 @@
+[info]
+fondo:fondo.jpg
+texturas:terrenogen.png
+mapa:.....####...
+     .##.......##
+     ....#.......
+     .....##.....
+
+[.]
+tipo:pasto
+colision:0
+tf:0
+tc:17
+
+[#]
+tipo:muro
+colision:1
+tf:6
+tc:8
