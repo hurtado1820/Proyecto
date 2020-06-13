@@ -23,7 +23,7 @@ class Jugador(pygame.sprite.Sprite):
         self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 aturdido, 5 muerto
         self.bloques = None
         self.pared = None
-        self.piso = False
+        self.piso = False #Bandera, gravedad
         self.plataformas = None
         self.inventario = [0,0,0,0] #gemas, vidas, buff, tiempo
 

@@ -60,6 +60,7 @@ if __name__ == '__main__':
         jf.mover()
 
     fin=False
+    reloj = pygame.time.Clock()
     while not fin:
         #control del jugador
         for event in pygame.event.get():
@@ -216,3 +217,4 @@ if __name__ == '__main__':
         tiempo.draw(ventana)
         jefe.draw(ventana)
         pygame.display.flip()
+        reloj.tick(20)

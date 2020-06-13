@@ -1,13 +1,12 @@
 import pygame
 from spritesMapa import *
 import configparser
+from const import *
 
 if __name__ == '__main__':
 
-    W  = 500
-    H = 500
     pygame.init()
-    ventana = pygame.display.set_mode([W,H])
+    ventana = pygame.display.set_mode([ANCHO,ALTO])
     fin = False
     reloj = pygame.time.Clock()
 
