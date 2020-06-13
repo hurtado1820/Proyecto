@@ -3,6 +3,7 @@ from enemigo import *
 from const import *
 import random
 
+#el enemigo2 es un generador, por esto no tiene su propio archivo
 class Enemigo2(Enemigo):
    def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
@@ -27,6 +28,28 @@ class Enemigo2(Enemigo):
        if self.vidas <= 0:
            self.estado = 2
 
+#los objetos que caerán en el enfrentamiento con el jefe2 pueden generarse de un sprite, no está implementado
+class Generador(pygame.sprite.Sprite):
+   def __init__(self,pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([40,40])
+        self.image.fill(VERDOSC)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.f_velxs = 0
+        self.velx = 0
+        self.vely = 0
+        self.type = "rival2"
+        self.estado = 1 # 1 piedras, 2 gano
+        self.temp = random.randrange(100)
+
+   def update(self):
+       self.temp -= 1
+       self.rect.x += self.f_velxs
+
+#misiles del enemigo estático del enemigo 1
+
 class Misil(pygame.sprite.Sprite):
     def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
@@ -44,6 +67,8 @@ class Misil(pygame.sprite.Sprite):
         self.rect.y = self.rect.y + self.vely
         self.rect.x += self.f_velxs
 
+#balas del jugador
+
 class Bala(pygame.sprite.Sprite):
     def __init__ (self,pos):
         pygame.sprite.Sprite.__init__(self)
@@ -58,7 +83,22 @@ class Bala(pygame.sprite.Sprite):
         self.rect.x = self.rect.x + self.velx
         self.rect.y = self.rect.y + self.vely
 
-class Explosion(pygame.sprite.Sprite):
+#objetos que caen durante el enfrentamiento del jefe2, tampoco están implementados
+class Piedra(pygame.sprite.Sprite):
+    def __init__ (self,pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([10,10])
+        self.image.fill(CELESTE)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.vely = 0
+
+    def update(self):
+        self.rect.y = self.rect.y + self.vely
+
+#ignore this
+'''class Explosion(pygame.sprite.Sprite):
     def __init__ (self,pos):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([100,100])
@@ -66,8 +106,9 @@ class Explosion(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.vely = 0
-        self.damage = 2
+        self.damage = 2'''
 
+#plataformas
 class Plataforma(pygame.sprite.Sprite):
     def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
