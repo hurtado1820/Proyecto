@@ -10,7 +10,7 @@ class Jefe1(Enemigo):
         self.con = 0
         self.animacion = m
         self.image = self.animacion[self.accion][self.con]'''
-        self.image = pygame.Surface([100,100])
+        self.image = pygame.Surface([70,70])
         self.image.fill(AZUL)
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
@@ -40,8 +40,6 @@ class Jefe1(Enemigo):
         y = self.rect.bottom
         return [x,y]
 
-
-
     def detener(self):
         self.velx=0
         self.vely=0
@@ -61,11 +59,18 @@ class Jefe1(Enemigo):
         else:
             self.accion = 2'''
 
+    def saltar(self):
+        if self.rect.x > self.x + 60 or self.rect.x < self.x -60:
+            self.vely = random.randint(-4,0)
+        else:
+             self.gravedad()
+
     def update(self):
         #Colision en x
-        if self.rect.x > self.x + 70:
+        self.saltar()
+        if self.rect.x > self.x + 75:
             self.velx = -1
-        elif self.rect.x < self.x -70:
+        elif self.rect.x < self.x -75:
             self.velx = 1
         self.rect.x += self.velx
         ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
@@ -108,7 +113,9 @@ class Jefe1(Enemigo):
         self.image = self.animacion[self.accion][self.con]'''
 
     def mover(self):
-        self.velx = 1
+        self.velx = 2
+        self.vely = -3
+        self.gravedad()
         self.estado = 2
 
     #si llega hasta alguno de los bordes cambiará la dirección en la que iba hacia el lado contrario

@@ -16,7 +16,7 @@ class Enemigo4(Enemigo):
         self.vely = 0
         self.type = "rival4"
         self.vidas = 1
-        self.damage = 0
+        self.damage = 4
         self.estado = 1 #1 activo, 2 explosion 3, inactivo
 
    def morir(self):

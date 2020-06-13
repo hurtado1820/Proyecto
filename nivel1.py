@@ -28,7 +28,7 @@ if __name__ == '__main__':
     rivales2.add(r2)
 
     #el jefe solo se crea, no tiene comportamiento
-    jf = Jefe1([800,280])
+    jf = Jefe1([815,280])
     jefe.add(jf)
 
     #Creacion de plataformas
@@ -48,6 +48,9 @@ if __name__ == '__main__':
 
     for r1 in rivales1:
         r1.mover()
+
+    for jf in jefe:
+        jf.mover()
 
     fin=False
     while not fin:
@@ -85,6 +88,7 @@ if __name__ == '__main__':
             #Eliminacion de las balas al chocar con bordes y personajes (al impactarlos les baja vida)
             disp1 = pygame.sprite.spritecollide(b,rivales1,False)
             disp2 = pygame.sprite.spritecollide(b,rivales2,False)
+            dispj = pygame.sprite.spritecollide(b,jefe,False)
             dispm = pygame.sprite.spritecollide(b,misiles,False)
             choq = pygame.sprite.spritecollide(b,plataformas,False)
             if choq:
@@ -101,6 +105,9 @@ if __name__ == '__main__':
                 r2.vidas -= 1
                 r2.damage = 0
                 balas.remove(b)
+            for jf in dispj:
+                jf.vidas -= 1
+                balas.remove(b)
             for m in dispm:
                 misiles.remove(m)
                 m.damage = 0
@@ -109,6 +116,7 @@ if __name__ == '__main__':
         #choque de los jugadores con los enemigos, si todavía están en juego le quitan vida al jugador
         col = pygame.sprite.spritecollide(r1,jugadores,False)
         col2 = pygame.sprite.spritecollide(r2,jugadores,False)
+        colj = pygame.sprite.spritecollide(jf,jugadores,False)
         if col:
             if r1.damage > 0:
                 impacto = True
@@ -120,6 +128,12 @@ if __name__ == '__main__':
                 impacto = True
                 j.velx *= -1
                 j.vidas -= r2.damage
+                print("vidas = ", j.vidas)
+        if colj:
+            if jf.damage > 0:
+                impacto = True
+                j.velx *= -1
+                j.vidas -= jf.damage
                 print("vidas = ", j.vidas)
 
         #control de muerte de los rivales
@@ -139,6 +153,13 @@ if __name__ == '__main__':
                 misiles.add(m)
                 r2.temp = random.randrange(100)
 
+        for jf in jefe:
+            jf.morir()
+            if jf.estado == 3:
+                jefe.remove(jf)
+                jf.damage = 0
+
+
         #eliminación de los misiles cuando tocan al jugador (le bajan vida) o llegan a los bordes
         for m in misiles:
             if m.rect.x < 0 or m.rect.x > ANCHO:
@@ -153,7 +174,7 @@ if __name__ == '__main__':
 
         #muerte del jugador
         j.morir()
-        if j.estado==4:
+        if j.estado==5:
             jugadores.remove(j)
             fin = True
 

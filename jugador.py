@@ -18,8 +18,9 @@ class Jugador(pygame.sprite.Sprite):
         self.velx = 0
         self.vely = 0
         self.vidas = 5
+        self.aturdido = 0
         #self.arma = 0
-        self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 muerto
+        self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 aturdido, 5 muerto
         self.bloques = None
         self.pared = None
         self.piso = False
@@ -97,9 +98,15 @@ class Jugador(pygame.sprite.Sprite):
         self.vely=0
         self.estado = 1
 
+
+    def aturdir(self):
+        if self.aturdido == 1:
+            self.estado = 4
+
     #cuando recoge el buff activa el estado de velocidad
     def mayo_rakuin(self):
          if self.inventario[2] > 0:
+             self.aturdido = 0
              self.estado = 2
              self.inventario[2] -= 1
 
@@ -112,4 +119,4 @@ class Jugador(pygame.sprite.Sprite):
     def morir(self):
          if self.vidas <= 0:
             self.detener()
-            self.estado = 4
+            self.estado = 5
