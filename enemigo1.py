@@ -19,15 +19,12 @@ class Enemigo1(Enemigo):
         self.velx = 0
         self.vely = 0
         self.f_velxs = 0
+        self.f_velys = 0
         self.radius = 60
         self.x = pos[0]
         self.vidas = 3
         self.damage = 2
         self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
-        self.muros = None
-        self.suelos = None
-        self.plataformas = None
-        self.piso = False
 
     def RetPos(self):
         x = self.rect.x + 20
@@ -62,7 +59,8 @@ class Enemigo1(Enemigo):
 
         self.rect.x += self.velx
         self.rect.x += self.f_velxs
-        self.rect.y += self.vely
+        #self.rect.y += self.vely
+        self.rect.y += self.f_velys
 
         #self.camino()
         '''if self.con < 5:

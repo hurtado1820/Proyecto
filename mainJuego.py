@@ -11,3 +11,4 @@ if __name__ == '__main__':
     Nivel1(ventana)
     print("sali de nivel uno")
     Nivel2(ventana)
+    print("sali del juego")

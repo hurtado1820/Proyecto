@@ -6,8 +6,33 @@ from enemigo4 import *
 from modificadores import *
 import pygame
 import random
+import time
+from cargarmapa2 import *
+from spritesMapa import *
 
 def Nivel2(ventana):
+    pygame.font.init()
+
+    fondo = pygame.image.load("fondo.jpg")
+    ventana.blit(fondo,[0,0])
+
+    #Info mapa en x
+    f_info = fondo.get_rect()
+    f_velx = 0
+    f_posx = 0
+    lim_der = ANCHO - 200
+    lim_izq = 200
+    f_lim_izq = 0
+    f_lim_der = ANCHO - f_info[2]
+
+    #Info mapa en y
+    f_vely = 0
+    f_posy = 0
+    lim_arri = 200
+    lim_aba = ALTO - 200
+    f_lim_arri = 0
+    f_lim_aba = ALTO - f_info[3]
+
     #Grupos
     jugadores = pygame.sprite.Group()
     rivales3 = pygame.sprite.Group()
@@ -17,9 +42,16 @@ def Nivel2(ventana):
     piedras = pygame.sprite.Group()
     gen = pygame.sprite.Group()
     balas = pygame.sprite.Group()
-    plataformas = pygame.sprite.Group()
     boost = pygame.sprite.Group()
     health = pygame.sprite.Group()
+    suelos = pygame.sprite.Group()
+    muros = pygame.sprite.Group()
+    pinchos = pygame.sprite.Group()
+    puentes = pygame.sprite.Group()
+    plataformas = pygame.sprite.Group()
+    monumentos = pygame.sprite.Group()
+
+    CargaMapa2(suelos,plataformas,muros,pinchos,puentes)
 
     #Creacion personajes
     j = Jugador([50,100])
@@ -30,6 +62,8 @@ def Nivel2(ventana):
     rivales4.add(r4)
     jf2 = Jefe2([120,380])
     jefe2.add(jf2)
+    monument = Monumento([3000,80])
+    monumentos.add(monument)
 
     #generadores
     g=Generador([900,100])
@@ -41,23 +75,42 @@ def Nivel2(ventana):
     s = Salud([560,345])
     health.add(s)
 
-    #Creacion plataformas
-    p2 = Plataforma([400,250])
-    plataformas.add(p2)
-    p3 = Plataforma([100,450])
-    plataformas.add(p3)
-    p4 = Plataforma([300,100])
-    plataformas.add(p4)
-
+    #Sprites con los que colisionan
     j.plataformas = plataformas
+    j.suelos = suelos
+    j.muros = muros
     r3.plataformas = plataformas
 
+    #Texto control vida jugador
+    info = pygame.font.Font(None,30)
+    vidas = "Vidas: " + str(j.vidas)
+    info_vidas = info.render(vidas,True,BLANCO)
+
+    #Timer del juego
+    cont = 0
+    tiempo = 0
+    info_t = pygame.font.Font(None,30)
+    restante = "Tiempo: " + str(tiempo) + "sg"
+    info_restante = info_t.render(restante,True,BLANCO)
+    p = 250.00
+    alarm = time.time() + p
+
+    #Movimiento inicial rival 3
     for r3 in rivales3:
         r3.mover()
 
     fin=False
+    fin_juego = False
     reloj = pygame.time.Clock()
-    while not fin:
+    while (not fin) and (not fin_juego):
+        #Control del Tiempo
+        n =  time.time()
+        if n < alarm:
+            tiempo = (round(alarm - n))
+            restante = "Tiempo: " + str(tiempo) + "sg"
+            info_restante = info_t.render(restante,True,BLANCO)
+        else:
+            fin_juego = True
         #movimiento del jugador
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -85,11 +138,11 @@ def Nivel2(ventana):
                         j.dir= 2
                 if event.key == pygame.K_SPACE:
                     if j.estado == 1:
-                        j.vely = -15
+                        j.vely = -7
                     if j.estado == 2:
-                        j.vely = -18
-                    if j.estado == 4:
                         j.vely = -10
+                    if j.estado == 4:
+                        j.vely = -4
                     j.piso = False
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
@@ -107,6 +160,92 @@ def Nivel2(ventana):
             if event.type == pygame.KEYUP:
                 j.velx = 0
 
+
+        #Control movimiento en x jugador con mapa
+        if j.rect.x > lim_der:
+            j.rect.x = lim_der
+            if f_posx > f_lim_der:
+                f_velx = -5
+            else:
+                f_velx = 0
+
+        elif j.rect.x < lim_izq:
+            j.rect.x = lim_izq
+            if f_posx < f_lim_izq:
+                f_velx = 5
+            else:
+                f_velx = 0
+
+        else:
+            f_velx = 0
+
+        #Control movimiento en y jugador con mapa
+        if j.rect.y > lim_aba:
+            j.rect.y = lim_aba
+            if f_posy > f_lim_aba:
+                f_vely = -5
+            else:
+                f_vely = 0
+
+        elif j.rect.y < lim_arri:
+            j.rect.y = lim_arri
+            if f_posy < f_lim_arri:
+                f_vely = 5
+            else:
+                f_vely = 0
+
+        else:
+            f_vely = 0
+
+
+        #Control movimiento objetos junto con mapa
+        for plat in plataformas:
+            plat.f_velxs = f_velx
+            plat.f_velys = f_vely
+        for bal in balas:
+            bal.f_velxs = f_velx
+            bal.f_velys = f_vely
+        for riv in rivales3:
+            riv.f_velxs = f_velx
+            riv.f_velys = f_vely
+        for ri in rivales4:
+            ri.f_velxs = f_velx
+            ri.f_velys = f_vely
+        for pi in boost:
+            pi.f_velxs = f_velx
+            pi.f_velys = f_vely
+        for tiem in health:
+            tiem.f_velxs = f_velx
+            tiem.f_velys = f_vely
+        for je in jefe2:
+            je.f_velxs = f_velx
+            je.f_velys = f_vely
+        for sue in suelos:
+            sue.f_velxs = f_velx
+            sue.f_velys = f_vely
+        for mur in muros:
+            mur.f_velxs = f_velx
+            mur.f_velys = f_vely
+        for pin in pinchos:
+            pin.f_velxs = f_velx
+            pin.f_velys = f_vely
+        for pue in puentes:
+            pue.f_velxs = f_velx
+            pue.f_velys = f_vely
+        for ond in ondas:
+            ond.f_velxs = f_velx
+            ond.f_velys = f_vely
+        for pie in piedras:
+            pie.f_velxs = f_velx
+            pie.f_velys = f_vely
+        for ge in gen:
+            ge.f_velxs = f_velx
+            ge.f_velys = f_vely
+        for mon in monumentos:
+            mon.f_velxs = f_velx
+            mon.f_velys = f_vely
+
+        #Control del jefe, se remueve al morir, genera onda con temp
         for jf2 in jefe2:
             jf2.morir()
             if jf2.estado == 2:
@@ -123,6 +262,7 @@ def Nivel2(ventana):
                 ondas.add(o)
                 jf2.temp = random.randrange(100)
 
+        #Generador de piedras
         for g in gen:
             if g.estado == 1:
                 if g.temp < 0:
@@ -131,6 +271,7 @@ def Nivel2(ventana):
                     piedras.add(pi)
                     g.temp = random.randrange(100)
 
+        #Control de balas
         for b in balas:
             dispj2 = pygame.sprite.spritecollide(b,jefe2,False)
             choq = pygame.sprite.spritecollide(b,plataformas,False)
@@ -164,7 +305,11 @@ def Nivel2(ventana):
                 piedras.remove(pi)
                 pi.damage = 0
                 balas.remove(b)
+            for mon in monumentos:
+                mon.f_velxs = f_velx
+                mon.f_velys = f_vely
 
+        #Choque de jugador con enemigos
         colj2 = pygame.sprite.spritecollide(jf2,jugadores,False)
         col3 = pygame.sprite.spritecollide(r3,jugadores,False)
         col4 = pygame.sprite.spritecollide(r4,jugadores,False)
@@ -174,24 +319,25 @@ def Nivel2(ventana):
                 j.velx *= -1
                 j.vely = -2
                 j.vidas -= jf2.damage
-                print("vidas = ", j.vidas)
+                vidas = "Vidas: " + str(j.vidas)
         if col3:
             if r3.estado == 1:
                 impacto = True
                 j.vidas = 0
-                print("vidas = ", j.vidas)
+                vidas = "Vidas: " + str(j.vidas)
         if col4:
             if r4.estado == 1:
                 impacto = True
                 r4.estado = 3
                 j.velx *= -1
                 j.vidas -= r4.damage
-                print("vidas = ", j.vidas)
+                vidas = "Vidas: " + str(j.vidas)
                 r4.vidas -= 1
 
-            #recoger modificadores
+        #recoger modificadores
         speed = pygame.sprite.spritecollide(v,jugadores,False)
         sal = pygame.sprite.spritecollide(s,jugadores,False)
+        monu = pygame.sprite.spritecollide(j,monumentos,False)
 
         if speed:
             boost.remove(v)
@@ -202,9 +348,14 @@ def Nivel2(ventana):
             health.remove(s)
             j.vidas += s.poder
             s.poder = 0
-            j.velx *= -1
-            print("vidas = ", j.vidas)
 
+        if monu:
+            if j.inventario[0] > 0:
+                fin_juego = True
+                victoria = True
+                j.inventario[0] = 0
+
+        #Control piedras generadas por jefe
         for pi in piedras:
             if pi.rect.bottom > ALTO:
                 piedras.remove(pi)
@@ -216,7 +367,7 @@ def Nivel2(ventana):
                 pi.damage = 0
             if pied:
                 j.vidas -= pi.damage
-                #print("vidas = ",j.vidas)
+                vidas = "Vidas: " + str(j.vidas)
                 piedras.remove(pi)
                 pi.damage = 0
 
@@ -246,10 +397,15 @@ def Nivel2(ventana):
                 r4.damage = 0
 
         j.morir()
+        vidas = "Vidas: " + str(j.vidas)
         if j.estado==5:
             jugadores.remove(j)
-            fin = True
+            fin_juego = True
+            victoria = False
 
+        #Refresco
+        #Update
+        monumentos.update()
         jugadores.update()
         balas.update()
         ondas.update()
@@ -259,7 +415,17 @@ def Nivel2(ventana):
         jefe2.update()
         gen.update()
         plataformas.update()
-        ventana.fill(NEGRO)
+        suelos.update()
+        muros.update()
+        puentes.update()
+        pinchos.update()
+        boost.update()
+        health.update()
+        #Dibujo fondo
+        ventana.blit(fondo,[f_posx,f_posy])
+        #Dibujo objetos
+        monumentos.draw(ventana)
+        suelos.draw(ventana)
         rivales3.draw(ventana)
         rivales4.draw(ventana)
         ondas.draw(ventana)
@@ -271,5 +437,31 @@ def Nivel2(ventana):
         jugadores.draw(ventana)
         jefe2.draw(ventana)
         plataformas.draw(ventana)
+        muros.draw(ventana)
+        puentes.draw(ventana)
+        pinchos.draw(ventana)
+        boost.draw(ventana)
+        health.draw(ventana)
         pygame.display.flip()
         reloj.tick(20)
+
+        #Mensajes
+        info_vidas = info_t.render(vidas,True,BLANCO)
+        ventana.blit(info_vidas,[190,10])
+        ventana.blit(info_restante,[10,10])
+        pygame.display.flip()
+        reloj.tick(20)
+
+        #Movimiento fondo
+        f_posx += f_velx
+        f_posy += f_vely
+
+    #Perdida
+    while (not fin) and (not victoria):
+        ventana.fill(AZUL)
+        pygame.display.flip()
+
+    #Victoria
+    while (not fin) and (victoria):
+        ventana.fill(ROJO)
+        pygame.display.flip()

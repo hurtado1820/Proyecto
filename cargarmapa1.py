@@ -18,19 +18,19 @@ def CargaMapa1(suelos,plataformas,muros,pinchos,puentes):
             tipo = archivo.get(c,"tipo")
             spr = int(archivo.get(c,"spr"))
             if tipo == "suelo":
-                s = Suelo([16*i,16*j],spr)
+                s = Suelo([48*i,48*j],spr)
                 suelos.add(s)
             if tipo == "plataforma":
-                p = Plataforma([16*i,16*j],spr)
+                p = Plataforma([48*i,48*j],spr)
                 plataformas.add(p)
             if tipo == "muro":
-                m = Muro([16*i,16*j],spr)
+                m = Muro([48*i,48*j],spr)
                 muros.add(m)
             if tipo == "pincho":
-                pi = Pincho([16*i,16*j],spr)
+                pi = Pincho([48*i,48*j],spr)
                 pinchos.add(pi)
             if tipo == "puente":
-                pue = Puente([16*i,16*j],spr)
+                pue = Puente([48*i,48*j],spr)
                 puentes.add(pue)
             i += 1
         j += 1

@@ -20,6 +20,7 @@ class Enemigo3(Enemigo):
         self.velx = 0
         self.vely = 0
         self.f_velxs = 0
+        self.f_velys = 0
         self.radius = 60
         self.vidas = 1
         self.damage = 4

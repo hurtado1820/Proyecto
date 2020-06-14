@@ -19,21 +19,20 @@ class Jefe1(Enemigo):
         self.velx = 0
         self.vely = 0
         self.f_velxs = 0
+        self.f_velys = 0
         self.radius = 60
         self.x = pos[0]
         self.vidas = 5
         self.damage = 2
         self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
-        self.bloques = None
         self.pared = None
         self.piso = False
-        self.plataformas = None
 
-    def gravedad(self):
+    '''def gravedad(self):
         if self.vely ==  0:
             self.vely = 0.5
         else:
-            self.vely += 0.5
+            self.vely += 0.5'''
 
     def RetPos(self):
         x = self.rect.x + 20
@@ -59,22 +58,24 @@ class Jefe1(Enemigo):
         else:
             self.accion = 2'''
 
-    def saltar(self):
+    '''def saltar(self):
         if self.rect.x > self.x + 60 or self.rect.x < self.x -60:
             self.vely = random.randint(-4,0)
         else:
-             self.gravedad()
+             self.gravedad()'''
 
     def update(self):
         #Colision en x
-        self.saltar()
+        #self.saltar()
         if self.rect.x > self.x + 75:
             self.velx = -1
         elif self.rect.x < self.x -75:
             self.velx = 1
         self.rect.x += self.velx
-        ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
-        for b in ls_col:
+        self.rect.x += self.f_velxs
+        ls_col = pygame.sprite.spritecollide(self,self.piso,False)
+        ls_col_m = pygame.sprite.spritecollide(self,self.pared,False)
+        '''for b in ls_col:
             if self.velx > 0:
                 if self.rect.right > b.rect.left:
                     self.rect.right = b.rect.left
@@ -82,10 +83,18 @@ class Jefe1(Enemigo):
             else:
                 if self.rect.left < b.rect.right:
                     self.rect.left = b.rect.right
+                    self.velx = 0'''
+
+        for mi in ls_col_m:
+            if self.velx < 0:
+                if self.rect.left < mi.rect.right:
+                    self.rect.left = mi.rect.right
                     self.velx = 0
+
         #Colision en y
         self.rect.y += self.vely
-        ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
+        self.rect.y += self.f_velys
+        ls_col = pygame.sprite.spritecollide(self,self.piso,False)
         for b in ls_col:
             if self.vely > 0:
                 if self.rect.bottom > b.rect.top:
@@ -96,13 +105,13 @@ class Jefe1(Enemigo):
                     self.rect.top = b.rect.bottom
                     self.vely = 0
         #Caida en el aire
-        if not self.piso:
-            self.gravedad()
+        '''if not self.piso:
+            self.gravedad()'''
         #Contacto con el piso
-        if self.rect.bottom > ALTO:
+        '''if self.rect.bottom > ALTO:
             self.vely = 0
             self.rect.bottom = ALTO
-            self.piso = True
+            self.piso = True'''
 
         #self.camino()
         '''if self.con < 5:
@@ -115,7 +124,7 @@ class Jefe1(Enemigo):
     def mover(self):
         self.velx = 2
         self.vely = -3
-        self.gravedad()
+        #self.gravedad()
         self.estado = 2
 
     #si llega hasta alguno de los bordes cambiará la dirección en la que iba hacia el lado contrario

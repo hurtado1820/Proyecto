@@ -13,23 +13,23 @@ from spritesMapa import *
 def Nivel1(ventana):
     pygame.font.init()
 
-    fondo = pygame.image.load("fondoj.jpg")
+    fondo = pygame.image.load("fondo.jpg")
     ventana.blit(fondo,[0,0])
 
     #Info mapa en x
     f_info = fondo.get_rect()
     f_velx = 0
     f_posx = 0
-    lim_der = ANCHO - 100
-    lim_izq = 100
+    lim_der = ANCHO - 200
+    lim_izq = 200
     f_lim_izq = 0
     f_lim_der = ANCHO - f_info[2]
 
     #Info mapa en y
     f_vely = 0
     f_posy = 0
-    lim_arri = 50
-    lim_aba = ALTO - 50
+    lim_arri = 200
+    lim_aba = ALTO - 200
     f_lim_arri = 0
     f_lim_aba = ALTO - f_info[3]
 
@@ -40,37 +40,45 @@ def Nivel1(ventana):
     rivales1 = pygame.sprite.Group()
     rivales2 = pygame.sprite.Group()
     misiles = pygame.sprite.Group()
-    pistola = pygame.sprite.Group()
+    pistolas = pygame.sprite.Group()
     tiempos = pygame.sprite.Group()
     jefe = pygame.sprite.Group()
     suelos = pygame.sprite.Group()
     muros = pygame.sprite.Group()
     pinchos = pygame.sprite.Group()
     puentes = pygame.sprite.Group()
+    monumentos = pygame.sprite.Group()
 
     CargaMapa1(suelos,plataformas,muros,pinchos,puentes)
 
     #Creacion personajes
-    j = Jugador([0,90])
+    j = Jugador([266,90])
     jugadores.add(j)
-    r1 = Enemigo1([30,30])
+    r1 = Enemigo1([720,240])
     rivales1.add(r1)
-    r2 = Enemigo2([220,0])
+    r1 = Enemigo1([912,670])
+    rivales1.add(r1)
+    r2 = Enemigo2([4220,1104])
     rivales2.add(r2)
-    jf = Jefe1([815,280])
+    r2 = Enemigo2([4220,816])
+    rivales2.add(r2)
+    jf = Jefe1([260,84])
     jefe.add(jf)
+    monument = Monumento([3000,80])
+    monumentos.add(monument)
 
     #modificadores
-    gun = Pistola([250,460])
-    pistola.add(gun)
-    t = Tiempo([400,20])
+    gun = Pistola([960,2112])
+    pistolas.add(gun)
+    t = Tiempo([4656,1536])
     tiempos.add(t)
 
-    #gravedad
+    #Sprites con los que colisionan
     j.plataformas = plataformas
     j.suelos = suelos
     j.muros = muros
-    jf.plataformas = plataformas
+    jf.piso = suelos
+    jf.pared = muros
 
     #Texto control vida jugador
     info = pygame.font.Font(None,30)
@@ -86,6 +94,8 @@ def Nivel1(ventana):
     p = 250.00
     alarm = time.time() + p
 
+
+    #Movimiento inicial rival1 y jefe
     for r1 in rivales1:
         r1.mover()
 
@@ -102,7 +112,13 @@ def Nivel1(ventana):
             restante = "Tiempo: " + str(tiempo) + "sg"
             info_restante = info_t.render(restante,True,BLANCO)
         else:
-            fin = True
+            if j.inventario[3] > 0:
+                p = 100.00
+                alarm = time.time() + p
+                j.inventario[3] = 0
+            else:
+                fin = True
+
         #control del jugador
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -136,7 +152,7 @@ def Nivel1(ventana):
             if event.type == pygame.KEYUP:
                 j.velx = 0
 
-        #Control movimiento jugador con mapa
+        #Control movimiento en x jugador con mapa
         if j.rect.x > lim_der:
             j.rect.x = lim_der
             if f_posx > f_lim_der:
@@ -154,32 +170,65 @@ def Nivel1(ventana):
         else:
             f_velx = 0
 
+        #Control movimiento en y jugador con mapa
+        if j.rect.y > lim_aba:
+            j.rect.y = lim_aba
+            if f_posy > f_lim_aba:
+                f_vely = -5
+            else:
+                f_vely = 0
+
+        elif j.rect.y < lim_arri:
+            j.rect.y = lim_arri
+            if f_posy < f_lim_arri:
+                f_vely = 5
+            else:
+                f_vely = 0
+
+        else:
+            f_vely = 0
+
 
         #Control movimiento objetos junto con mapa
         for plat in plataformas:
             plat.f_velxs = f_velx
+            plat.f_velys = f_vely
         for bal in balas:
             bal.f_velxs = f_velx
+            bal.f_velys = f_vely
         for riv in rivales1:
             riv.f_velxs = f_velx
+            riv.f_velys = f_vely
         for ri in rivales2:
             ri.f_velxs = f_velx
+            ri.f_velys = f_vely
         for mis in misiles:
             mis.f_velxs = f_velx
-        for pi in pistola:
+            mis.f_velys = f_vely
+        for pi in pistolas:
             pi.f_velxs = f_velx
+            pi.f_velys = f_vely
         for tiem in tiempos:
             tiem.f_velxs = f_velx
+            tiem.f_velys = f_vely
         for je in jefe:
             je.f_velxs = f_velx
+            je.f_velys = f_vely
         for sue in suelos:
             sue.f_velxs = f_velx
+            sue.f_velys = f_vely
         for mur in muros:
             mur.f_velxs = f_velx
+            mur.f_velys = f_vely
         for pin in pinchos:
             pin.f_velxs = f_velx
+            pin.f_velys = f_vely
         for pue in puentes:
             pue.f_velxs = f_velx
+            pue.f_velys = f_vely
+        for mon in monumentos:
+            mon.f_velxs = f_velx
+            mon.f_velys = f_vely
 
         for b in balas:
             #Eliminacion de las balas al chocar con bordes y personajes (al impactarlos les baja vida)
@@ -236,13 +285,20 @@ def Nivel1(ventana):
         #recoger modificadores
         ars = pygame.sprite.spritecollide(gun,jugadores,False)
         tie = pygame.sprite.spritecollide(t,jugadores,False)
+        monu = pygame.sprite.spritecollide(j,monumentos,False)
 
         if ars:
-            pistola.remove(gun)
+            pistolas.remove(gun)
             j.arma = 1
 
         if tie:
             tiempo.remove(t)
+            j.inventario[3] = 1
+
+        if monu:
+            if j.inventario[0] > 0:
+                fin = True
+                j.inventario[0] = 0
 
         #control de muerte de los rivales
         for r1 in rivales1:
@@ -257,7 +313,7 @@ def Nivel1(ventana):
                 temp = -1
             if r2.temp < 0:
                 m = Misil(r2.rect)
-                m.velx = 5
+                m.velx = -5
                 misiles.add(m)
                 r2.temp = random.randrange(100)
 
@@ -289,6 +345,7 @@ def Nivel1(ventana):
 
         #Refresco
         #Update
+        monumentos.update()
         suelos.update()
         plataformas.update()
         muros.update()
@@ -300,9 +357,12 @@ def Nivel1(ventana):
         balas.update()
         misiles.update()
         jefe.update()
+        pistolas.update()
+        tiempos.update()
         #Dibujo de fondo
         ventana.blit(fondo,[f_posx,f_posy])
         #Dibujo objetos
+        monumentos.draw(ventana)
         suelos.draw(ventana)
         plataformas.draw(ventana)
         muros.draw(ventana)
@@ -313,8 +373,7 @@ def Nivel1(ventana):
         misiles.draw(ventana)
         balas.draw(ventana)
         jugadores.draw(ventana)
-        plataformas.draw(ventana)
-        pistola.draw(ventana)
+        pistolas.draw(ventana)
         tiempos.draw(ventana)
         jefe.draw(ventana)
         #Mensajes
@@ -326,3 +385,4 @@ def Nivel1(ventana):
 
         #Movimiento fondo
         f_posx += f_velx
+        f_posy += f_vely

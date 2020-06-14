@@ -48,7 +48,7 @@ class Tiempo(pygame.sprite.Sprite):
 
     def update(self):
          self.rect.x += self.f_velxs
-         #self.rect.y += self.f_velys
+         self.rect.y += self.f_velys
 
 class Pistola(pygame.sprite.Sprite):
     def __init__(self,pos):
@@ -64,4 +64,4 @@ class Pistola(pygame.sprite.Sprite):
 
     def update(self):
          self.rect.x += self.f_velxs
-         #self.rect.y += self.f_velys
+         self.rect.y += self.f_velys

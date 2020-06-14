@@ -20,6 +20,7 @@ class Jefe2(Enemigo):
         self.velx = 0
         self.vely = 0
         self.f_velxs = 0
+        self.f_velys = 0
         self.vidas = 10
         self.damage = 1
         self.estado = 1 # 1 estándar, 2 muerto
@@ -28,6 +29,7 @@ class Jefe2(Enemigo):
     def update(self):
        self.temp -= 1
        self.rect.x += self.f_velxs
+       self.rect.y += self.f_velys
 
     def morir(self):
         if self.vidas <= 0:
@@ -42,6 +44,7 @@ class Enemigo2(Enemigo):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.f_velxs = 0
+        self.f_velys = 0
         self.velx = 0
         self.vely = 0
         self.type = "rival2"
@@ -53,6 +56,7 @@ class Enemigo2(Enemigo):
    def update(self):
        self.temp -= 1
        self.rect.x += self.f_velxs
+       self.rect.y += self.f_velys
 
    def morir(self):
        if self.vidas <= 0:
@@ -68,6 +72,7 @@ class Generador(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.f_velxs = 0
+        self.f_velys = 0
         self.velx = 0
         self.vely = 0
         self.type = "rival2"
@@ -77,6 +82,7 @@ class Generador(pygame.sprite.Sprite):
    def update(self):
        self.temp -= 1
        self.rect.x += self.f_velxs
+       self.rect.y += self.f_velys
 
 #misiles del enemigo2
 class Misil(pygame.sprite.Sprite):
@@ -90,11 +96,13 @@ class Misil(pygame.sprite.Sprite):
         self.vely = 0
         self.damage = 1
         self.f_velxs = 0
+        self.f_velys = 0
 
     def update(self):
         self.rect.x = self.rect.x + self.velx
         self.rect.y = self.rect.y + self.vely
         self.rect.x += self.f_velxs
+        self.rect.y += self.f_velys
 
 #balas del jugador
 class Bala(pygame.sprite.Sprite):
@@ -107,10 +115,14 @@ class Bala(pygame.sprite.Sprite):
         self.rect.y = pos[1]
         self.vely = 0
         self.velx = 0
+        self.f_velxs = 0
+        self.f_velys = 0
 
     def update(self):
         self.rect.x = self.rect.x + self.velx
         self.rect.y = self.rect.y + self.vely
+        self.rect.x += self.f_velxs
+        self.rect.y += self.f_velys
 
 #el jefe 2 lanza ondas que "aturden" al jugador
 class Onda(pygame.sprite.Sprite):
@@ -141,3 +153,19 @@ class Piedra(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y = self.rect.y + self.vely
+
+#Objeto monumento
+class Monumento(pygame.sprite.Sprite):
+    def __init__ (self,pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([30,10])
+        self.image.fill(CELESTE)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.f_velxs = 0
+        self.f_velys = 0
+
+    def update(self):
+        self.rect.x += self.f_velxs
+        self.rect.y += self.f_velys

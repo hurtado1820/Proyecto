@@ -25,7 +25,7 @@ class Jugador(pygame.sprite.Sprite):
         self.suelos = None
         self.plataformas = None
         self.piso = False #Bandera, gravedad
-        self.inventario = [0,0,0,0] #gemas, vidas, buff, tiempo
+        self.inventario = [0,0,0,0] #gemas, vidas, velocidad, tiempo
 
     '''def animar(self):
         if self.velx != self.vely:
