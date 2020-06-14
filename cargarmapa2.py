@@ -1,13 +1,10 @@
 import pygame
 from spritesMapa import *
 import configparser
+from const import *
 
-if __name__ == '__main__':
+def CargaMapa2(ventana):
 
-    W  = 500
-    H = 500
-    pygame.init()
-    ventana = pygame.display.set_mode([W,H])
     fin = False
     reloj = pygame.time.Clock()
 

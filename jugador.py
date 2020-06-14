@@ -8,7 +8,7 @@ class Jugador(pygame.sprite.Sprite):
         self.con = 0
         self.animacion = m
         self.image = self.animacion[self.accion][self.con]'''
-        self.image = pygame.Surface([60,60])
+        self.image = pygame.Surface([20,40])
         self.image.fill(BLANCO)
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
@@ -21,10 +21,10 @@ class Jugador(pygame.sprite.Sprite):
         self.aturdido = 0
         self.arma = 0
         self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 aturdido, 5 muerto
-        self.bloques = None
-        self.pared = None
-        self.piso = False #Bandera, gravedad
+        self.muros = None
+        self.suelos = None
         self.plataformas = None
+        self.piso = False #Bandera, gravedad
         self.inventario = [0,0,0,0] #gemas, vidas, buff, tiempo
 
     '''def animar(self):
@@ -44,10 +44,12 @@ class Jugador(pygame.sprite.Sprite):
 
     def update(self):
         #Colision en x
-        self.limites()
         self.rect.x += self.velx
-        ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
-        for b in ls_col:
+        ls_col_p = pygame.sprite.spritecollide(self,self.plataformas,False)
+        ls_col_s = pygame.sprite.spritecollide(self,self.suelos,False)
+        ls_col_m = pygame.sprite.spritecollide(self,self.muros,False)
+        #Colision con plataformas
+        for b in ls_col_p:
             if self.velx > 0:
                 if self.rect.right > b.rect.left:
                     self.rect.right = b.rect.left
@@ -56,37 +58,74 @@ class Jugador(pygame.sprite.Sprite):
                 if self.rect.left < b.rect.right:
                     self.rect.left = b.rect.right
                     self.velx = 0
+
+        #Colision con suelo
+        for m in ls_col_s:
+            if self.velx > 0:
+                if self.rect.right > m.rect.left:
+                    self.rect.right = m.rect.left
+                    self.velx = 0
+            else:
+                if self.rect.left < m.rect.right:
+                    self.rect.left = m.rect.right
+                    self.velx = 0
+
+        #Colision con muro
+        for p in ls_col_m:
+            if self.velx > 0:
+                if self.rect.right > p.rect.left:
+                    self.rect.right = p.rect.left
+                    self.velx = 0
+            else:
+                if self.rect.left < p.rect.right:
+                    self.rect.left = p.rect.right
+                    self.velx = 0
+
         #Colision en y
         self.rect.y += self.vely
-        ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
-        for b in ls_col:
+        ls_col_p = pygame.sprite.spritecollide(self,self.plataformas,False)
+        ls_col_s = pygame.sprite.spritecollide(self,self.suelos,False)
+        ls_col_m = pygame.sprite.spritecollide(self,self.muros,False)
+        #Colision con plataformas
+        for bp in ls_col_p:
             if self.vely > 0:
-                if self.rect.bottom > b.rect.top:
-                    self.rect.bottom = b.rect.top
+                if self.rect.bottom > bp.rect.top:
+                    self.rect.bottom = bp.rect.top
+                    self.vely = 0
+                    self.piso = True
+            '''else:
+                if self.rect.top < bp.rect.bottom:
+                    self.rect.top = bp.rect.bottom
+                    self.vely = 0'''
+
+        #Colision con suelo
+        for m in ls_col_s:
+            if self.vely > 0:
+                if self.rect.bottom >= m.rect.top:
+                    self.rect.bottom = m.rect.top
+                    self.vely = 0
+
+        #Colision con muro
+        for f in ls_col_m:
+            if self.vely > 0:
+                if self.rect.bottom > f.rect.top:
+                    self.rect.bottom = f.rect.top
                     self.vely = 0
             else:
-                if self.rect.top < b.rect.bottom:
-                    self.rect.top = b.rect.bottom
+                if self.rect.top < f.rect.bottom:
+                    self.rect.top = f.rect.bottom
                     self.vely = 0
 
         #Caida en el aire
         if not self.piso:
             self.gravedad()
         #Contacto con el piso
-        if self.rect.bottom > ALTO:
+        '''if self.rect.bottom > ALTO:
             self.vely = 0
             self.rect.bottom = ALTO
-            self.piso = True
+            self.piso = True'''
 
         #self.animar()
-
-    #función temporal para mantener al jugador en la pantalla
-    def limites(self):
-        self.rect.x += self.velx
-        if (self.rect.right > ANCHO - 1) and (self.velx > 0):
-            self.velx = 0
-        if (self.rect.left < 1) and (self.velx < 0):
-            self.velx = 0
 
     def RetPos(self):
         x = (self.rect.x) + 10

@@ -11,6 +11,12 @@ class Salud(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.poder = 1
+        self.f_velxs = 0
+        self.f_velys = 0
+
+    def update(self):
+         self.rect.x += self.f_velxs
+         self.rect.y += self.f_velys
 
 class Boost(pygame.sprite.Sprite):
     def __init__(self,pos):
@@ -21,6 +27,12 @@ class Boost(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.activo = 1
+        self.f_velxs = 0
+        self.f_velys = 0
+
+    def update(self):
+         self.rect.x += self.f_velxs
+         self.rect.y += self.f_velys
 
 class Tiempo(pygame.sprite.Sprite):
     def __init__(self,pos):
@@ -31,6 +43,12 @@ class Tiempo(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.activo = 1
+        self.f_velxs = 0
+        self.f_velys = 0
+
+    def update(self):
+         self.rect.x += self.f_velxs
+         #self.rect.y += self.f_velys
 
 class Pistola(pygame.sprite.Sprite):
     def __init__(self,pos):
@@ -41,3 +59,9 @@ class Pistola(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.activo = 1
+        self.f_velxs = 0
+        self.f_velys = 0
+
+    def update(self):
+         self.rect.x += self.f_velxs
+         #self.rect.y += self.f_velys

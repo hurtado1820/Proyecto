@@ -7,10 +7,7 @@ from modificadores import *
 import pygame
 import random
 
-if __name__ == '__main__':
-    pygame.init()
-    ventana = pygame.display.set_mode([ANCHO,ALTO])
-
+def Nivel2(ventana):
     #Grupos
     jugadores = pygame.sprite.Group()
     rivales3 = pygame.sprite.Group()
@@ -39,7 +36,7 @@ if __name__ == '__main__':
     gen.add(g)
 
     #modificadores
-    v = Boost([200,565])
+    v = Boost([200,460])
     boost.add(v)
     s = Salud([560,345])
     health.add(s)
@@ -200,6 +197,7 @@ if __name__ == '__main__':
             boost.remove(v)
             j.inventario[2] += 1
             j.mayo_rakuin()
+
         if sal:
             health.remove(s)
             j.vidas += s.poder

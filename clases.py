@@ -141,13 +141,3 @@ class Piedra(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y = self.rect.y + self.vely
-
-#plataformas
-class Plataforma(pygame.sprite.Sprite):
-    def __init__(self,pos):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([200,80])
-        self.image.fill(VERDE)
-        self.rect = self.image.get_rect()
-        self.rect.x = pos[0]
-        self.rect.y = pos[1]

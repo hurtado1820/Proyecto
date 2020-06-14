@@ -3,28 +3,13 @@ from spritesMapa import *
 import configparser
 from const import *
 
-if __name__ == '__main__':
-
-    pygame.init()
-    ventana = pygame.display.set_mode([ANCHO,ALTO])
-    fin = False
-    reloj = pygame.time.Clock()
+def CargaMapa1(suelos,plataformas,muros,pinchos,puentes):
 
     archivo = configparser.ConfigParser()
     archivo.read("level-one.map")
 
-    #ventana.fill([0,0,0])
-    fondo = pygame.image.load("fondoj.jpg")
-    ventana.blit(fondo,[0,0])
-
     info_mapa = archivo.get("info","mapa")
     mapa = info_mapa.split("\n")
-
-    suelos = pygame.sprite.Group()
-    plataformas = pygame.sprite.Group()
-    muros = pygame.sprite.Group()
-    pinchos = pygame.sprite.Group()
-    puentes = pygame.sprite.Group()
 
     j = 0
     for f in mapa:
@@ -49,23 +34,3 @@ if __name__ == '__main__':
                 puentes.add(pue)
             i += 1
         j += 1
-
-    while not fin:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                fin = True
-
-
-        suelos.update()
-        plataformas.update()
-        muros.update()
-        puentes.update()
-        pinchos.update()
-        ventana.blit(fondo,[0,0])
-        suelos.draw(ventana)
-        plataformas.draw(ventana)
-        muros.draw(ventana)
-        puentes.draw(ventana)
-        pinchos.draw(ventana)
-        pygame.display.flip()
-        reloj.tick(20)

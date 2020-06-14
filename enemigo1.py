@@ -10,7 +10,7 @@ class Enemigo1(Enemigo):
         self.con = 0
         self.animacion = m
         self.image = self.animacion[self.accion][self.con]'''
-        self.image = pygame.Surface([40,40])
+        self.image = pygame.Surface([10,40])
         self.image.fill(GRIS)
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
@@ -24,16 +24,10 @@ class Enemigo1(Enemigo):
         self.vidas = 3
         self.damage = 2
         self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
-        self.bloques = None
-        self.pared = None
-        self.piso = False
+        self.muros = None
+        self.suelos = None
         self.plataformas = None
-
-    def gravedad(self):
-        if self.vely ==  0:
-            self.vely = 0.5
-        else:
-            self.vely += 0.5
+        self.piso = False
 
     def RetPos(self):
         x = self.rect.x + 20
@@ -65,37 +59,10 @@ class Enemigo1(Enemigo):
             self.velx = -1
         elif self.rect.x < self.x -70:
             self.velx = 1
+
         self.rect.x += self.velx
-        ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
-        for b in ls_col:
-            if self.velx > 0:
-                if self.rect.right > b.rect.left:
-                    self.rect.right = b.rect.left
-                    self.velx = 0
-            else:
-                if self.rect.left < b.rect.right:
-                    self.rect.left = b.rect.right
-                    self.velx = 0
-        #Colision en y
+        self.rect.x += self.f_velxs
         self.rect.y += self.vely
-        ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
-        for b in ls_col:
-            if self.vely > 0:
-                if self.rect.bottom > b.rect.top:
-                    self.rect.bottom = b.rect.top
-                    self.vely = 0
-            else:
-                if self.rect.top < b.rect.bottom:
-                    self.rect.top = b.rect.bottom
-                    self.vely = 0
-        #Caida en el aire
-        if not self.piso:
-            self.gravedad()
-        #Contacto con el piso
-        if self.rect.bottom > ALTO:
-            self.vely = 0
-            self.rect.bottom = ALTO
-            self.piso = True
 
         #self.camino()
         '''if self.con < 5:
