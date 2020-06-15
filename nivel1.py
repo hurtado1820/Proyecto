@@ -2,7 +2,6 @@ from jugador import *
 from clases import *
 from const import *
 from enemigo1 import *
-from jefe1 import *
 from modificadores import *
 import pygame
 import random
@@ -45,24 +44,44 @@ def Nivel1(ventana):
     jefe = pygame.sprite.Group()
     suelos = pygame.sprite.Group()
     muros = pygame.sprite.Group()
+    proyectiles = pygame.sprite.Group()
     pinchos = pygame.sprite.Group()
     puentes = pygame.sprite.Group()
     monumentos = pygame.sprite.Group()
+
+    #sabanas y recortes
+    en1_spr = pygame.image.load("enemigo1.png")
+    en1 = []
+    for f in range(4):
+        fila=[]
+        for c in range(4):
+            cuadro = en1_spr.subsurface(80*c,79*f,80,79)
+            fila.append(cuadro)
+        en1.append(fila)
+
+    jf1_spr = pygame.image.load("jefe1.png")
+    jef1 = []
+    for f1 in range(2):
+        fila1=[]
+        for c1 in range(4):
+            cuadro1 = jf1_spr.subsurface(100*c1,102*f1,100,102)
+            fila1.append(cuadro1)
+        jef1.append(fila1)
 
     CargaMapa1(suelos,plataformas,muros,pinchos,puentes)
 
     #Creacion personajes
     j = Jugador([266,90])
     jugadores.add(j)
-    r1 = Enemigo1([720,240])
+    r1 = Enemigo1([720,240],en1)
     rivales1.add(r1)
-    r1 = Enemigo1([912,670])
+    r1 = Enemigo1([912,670],en1)
     rivales1.add(r1)
     r2 = Enemigo2([4220,1104])
     rivales2.add(r2)
     r2 = Enemigo2([4220,816])
     rivales2.add(r2)
-    jf = Jefe1([260,84])
+    jf = Jefe1([600,400],jef1)
     jefe.add(jf)
     monument = Monumento([3000,80])
     monumentos.add(monument)
@@ -77,7 +96,7 @@ def Nivel1(ventana):
     j.plataformas = plataformas
     j.suelos = suelos
     j.muros = muros
-    jf.piso = suelos
+    jf.suelos = suelos
     jf.pared = muros
 
     #Texto control vida jugador
@@ -125,13 +144,13 @@ def Nivel1(ventana):
                 fin = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    j.velx = 5
+                    j.velx = 7
                     j.dir=1
                 if event.key  == pygame.K_LEFT:
-                    j.velx = -5
+                    j.velx = -7
                     j.dir=2
                 if event.key == pygame.K_SPACE:
-                    j.vely = -7
+                    j.vely = -10
                     j.piso = False
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
@@ -217,6 +236,9 @@ def Nivel1(ventana):
         for sue in suelos:
             sue.f_velxs = f_velx
             sue.f_velys = f_vely
+        for pro in proyectiles:
+            pro.f_velxs = f_velx
+            pro.f_velys = f_vely
         for mur in muros:
             mur.f_velxs = f_velx
             mur.f_velys = f_vely
@@ -235,6 +257,7 @@ def Nivel1(ventana):
             disp1 = pygame.sprite.spritecollide(b,rivales1,False)
             disp2 = pygame.sprite.spritecollide(b,rivales2,False)
             dispj = pygame.sprite.spritecollide(b,jefe,False)
+            dispr = pygame.sprite.spritecollide(b,proyectiles,False)
             dispm = pygame.sprite.spritecollide(b,misiles,False)
             choq = pygame.sprite.spritecollide(b,plataformas,False)
             if choq:
@@ -254,33 +277,51 @@ def Nivel1(ventana):
             for jf in dispj:
                 jf.vidas -= 1
                 balas.remove(b)
+            for pr in dispr:
+                proyectiles.remove(pr)
+                pr.damage = 0
+                balas.remove(b)
             for m in dispm:
                 misiles.remove(m)
                 m.damage = 0
                 balas.remove(b)
 
         #choque de los jugadores con los enemigos, si todavía están en juego le quitan vida al jugador
-        col = pygame.sprite.spritecollide(r1,jugadores,False)
-        col2 = pygame.sprite.spritecollide(r2,jugadores,False)
+
         colj = pygame.sprite.spritecollide(jf,jugadores,False)
-        if col:
-            if r1.damage > 0:
-                impacto = True
-                j.velx *= -1
-                j.vidas -= r1.damage
-                vidas = "Vidas: " + str(j.vidas)
-        if col2:
-            if r2.damage > 0:
-                impacto = True
-                j.velx *= -1
-                j.vidas -= r2.damage
-                vidas = "Vidas: " + str(j.vidas)
+        for r1 in rivales1:
+            col = pygame.sprite.spritecollide(r1,jugadores,False)
+            if col:
+                if r1.damage > 0:
+                    impacto = True
+                    j.vidas -= r1.damage
+                    j.velx *= -1
+                    j.vely = 5
+                    vidas = "Vidas: " + str(j.vidas)
+        for r2 in rivales2:
+            col2 = pygame.sprite.spritecollide(r2,jugadores,False)
+            if col2:
+                if r2.damage > 0:
+                    impacto = True
+                    j.vidas -= r2.damage
+                    j.velx *= -1
+                    vidas = "Vidas: " + str(j.vidas)
+        for r2 in rivales2:
+            col2 = pygame.sprite.spritecollide(r2,jugadores,False)
+            if col2:
+                if r2.damage > 0:
+                    impacto = True
+                    j.vidas -= r2.damage
+                    j.velx *= -1
+                    vidas = "Vidas: " + str(j.vidas)
         if colj:
             if jf.damage > 0:
                 impacto = True
-                j.velx *= -1
                 j.vidas -= jf.damage
+                j.velx *= -1
                 vidas = "Vidas: " + str(j.vidas)
+
+
 
         #recoger modificadores
         ars = pygame.sprite.spritecollide(gun,jugadores,False)
@@ -310,10 +351,15 @@ def Nivel1(ventana):
         for r2 in rivales2:
             r2.morir()
             if r2.estado == 2:
-                temp = -1
+                r2.temp = -1
+                r2.damage = 0
             if r2.temp < 0:
+                direccion = random.randrange(500)
                 m = Misil(r2.rect)
-                m.velx = -5
+                if direccion < 125:
+                    m.velx = 5
+                elif direccion < 250:
+                    m.velx = -5
                 misiles.add(m)
                 r2.temp = random.randrange(100)
 
@@ -322,6 +368,18 @@ def Nivel1(ventana):
             if jf.estado == 3:
                 jefe.remove(jf)
                 jf.damage = 0
+            if jf.temp < 0:
+                posj = jf.RetPos()
+                pr = Proyectil(posj)
+                pr2 = Proyectil(posj)
+                if jf.accion == 0:
+                    pr.velx = 5
+                elif jf.accion == 1:
+                    pr.velx = -5
+                proyectiles.add(pr)
+                proyectiles.add(pr2)
+                pr2.vely = -5
+                jf.temp = random.randrange(100)
 
 
         #eliminación de los misiles cuando tocan al jugador (le bajan vida) o llegan a los bordes
@@ -335,6 +393,16 @@ def Nivel1(ventana):
                 vidas = "Vidas: " + str(j.vidas)
                 misiles.remove(m)
                 m.damage = 0
+
+        for pr in proyectiles:
+            pry = pygame.sprite.spritecollide(pr,jugadores,False)
+            if pry:
+                if pr.damage > 0:
+                    impacto = True
+                    j.velx *= -1
+                    j.vidas -= 1
+                    proyectiles.remove(pr)
+                    pr.damage = 0
 
         #muerte del jugador
         j.morir()
@@ -356,6 +424,7 @@ def Nivel1(ventana):
         rivales2.update()
         balas.update()
         misiles.update()
+        proyectiles.update()
         jefe.update()
         pistolas.update()
         tiempos.update()
@@ -364,6 +433,7 @@ def Nivel1(ventana):
         #Dibujo objetos
         monumentos.draw(ventana)
         suelos.draw(ventana)
+        proyectiles.draw(ventana)
         plataformas.draw(ventana)
         muros.draw(ventana)
         puentes.draw(ventana)

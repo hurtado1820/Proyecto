@@ -9,6 +9,7 @@ import random
 import time
 from cargarmapa2 import *
 from spritesMapa import *
+from jefe2 import *
 
 def Nivel2(ventana):
     pygame.font.init()
@@ -38,7 +39,6 @@ def Nivel2(ventana):
     rivales3 = pygame.sprite.Group()
     rivales4 = pygame.sprite.Group()
     jefe2 = pygame.sprite.Group()
-    ondas = pygame.sprite.Group()
     piedras = pygame.sprite.Group()
     gen = pygame.sprite.Group()
     balas = pygame.sprite.Group()
@@ -51,16 +51,41 @@ def Nivel2(ventana):
     plataformas = pygame.sprite.Group()
     monumentos = pygame.sprite.Group()
 
+    #sabanas y recortes
+    en3_spr = pygame.image.load("enemigo3.png")
+    en3 = []
+    for c in range(4):
+        cuadro = en3_spr.subsurface(102*c,0,102,114)
+        en3.append(cuadro)
+
+    en4_spr = pygame.image.load("explode.png")
+    en4 = []
+    for f2 in range(2):
+        fila2=[]
+        for c2 in range(5):
+            cuadro2 = en4_spr.subsurface(50*c2,47*f2,50,47)
+            fila2.append(cuadro2)
+        en4.append(fila2)
+
+    jf2_spr = pygame.image.load("jefe2.png")
+    jef2 = []
+    for f3 in range(2):
+        fila3=[]
+        for c3 in range(4):
+            cuadro3 = jf2_spr.subsurface(91*c3,60*f3,91,60)
+            fila3.append(cuadro3)
+        jef2.append(fila3)
+
     CargaMapa2(suelos,plataformas,muros,pinchos,puentes)
 
     #Creacion personajes
     j = Jugador([50,100])
     jugadores.add(j)
-    r3 = Enemigo3([320,30])
+    r3 = Enemigo3([250,30],en3)
     rivales3.add(r3)
-    r4 = Enemigo4([410,190])
+    r4 = Enemigo4([410,190],en4_spr)
     rivales4.add(r4)
-    jf2 = Jefe2([120,380])
+    jf2 = Jefe2([50,200],jef2)
     jefe2.add(jf2)
     monument = Monumento([3000,80])
     monumentos.add(monument)
@@ -75,11 +100,13 @@ def Nivel2(ventana):
     s = Salud([560,345])
     health.add(s)
 
+
     #Sprites con los que colisionan
     j.plataformas = plataformas
     j.suelos = suelos
     j.muros = muros
     r3.plataformas = plataformas
+    r3.suelos = suelos
 
     #Texto control vida jugador
     info = pygame.font.Font(None,30)
@@ -98,6 +125,9 @@ def Nivel2(ventana):
     #Movimiento inicial rival 3
     for r3 in rivales3:
         r3.mover()
+
+    for jf2 in jefe2:
+        jf2.mover()
 
     fin=False
     fin_juego = False
@@ -205,9 +235,6 @@ def Nivel2(ventana):
         for bal in balas:
             bal.f_velxs = f_velx
             bal.f_velys = f_vely
-        for riv in rivales3:
-            riv.f_velxs = f_velx
-            riv.f_velys = f_vely
         for ri in rivales4:
             ri.f_velxs = f_velx
             ri.f_velys = f_vely
@@ -232,35 +259,23 @@ def Nivel2(ventana):
         for pue in puentes:
             pue.f_velxs = f_velx
             pue.f_velys = f_vely
-        for ond in ondas:
-            ond.f_velxs = f_velx
-            ond.f_velys = f_vely
         for pie in piedras:
             pie.f_velxs = f_velx
             pie.f_velys = f_vely
         for ge in gen:
             ge.f_velxs = f_velx
-            ge.f_velys = f_vely
+            pue.f_velys = f_vely
         for mon in monumentos:
             mon.f_velxs = f_velx
             mon.f_velys = f_vely
 
-        #Control del jefe, se remueve al morir, genera onda con temp
+        #Control del jefe, se remueve al morir, controla los generadores de piedras
         for jf2 in jefe2:
             jf2.morir()
-            if jf2.estado == 2:
+            if jf2.estado == 3:
                 jefe2.remove(jf2)
                 jf2.damage = 0
                 g.estado = 2
-            if jf2.temp < 0:
-                direccion = random.randrange(250)
-                o = Onda(jf2.rect)
-                if direccion < 125:
-                    o.velx = 5
-                elif direccion < 250:
-                    o.velx = -5
-                ondas.add(o)
-                jf2.temp = random.randrange(100)
 
         #Generador de piedras
         for g in gen:
@@ -277,7 +292,6 @@ def Nivel2(ventana):
             choq = pygame.sprite.spritecollide(b,plataformas,False)
             disp3 = pygame.sprite.spritecollide(b,rivales3,False)
             disp4 = pygame.sprite.spritecollide(b,rivales4,False)
-            dispo = pygame.sprite.spritecollide(b,ondas,False)
             dispd = pygame.sprite.spritecollide(b,piedras,False)
             if choq:
                 balas.remove(b)
@@ -297,10 +311,6 @@ def Nivel2(ventana):
                 if jf2.estado == 1:
                     jf2.vidas -= 1
                     balas.remove(b)
-            for o in ondas:
-                ondas.remove(o)
-                o.damage = 0
-                balas.remove(b)
             for pi in piedras:
                 piedras.remove(pi)
                 pi.damage = 0
@@ -312,27 +322,27 @@ def Nivel2(ventana):
         #Choque de jugador con enemigos
         colj2 = pygame.sprite.spritecollide(jf2,jugadores,False)
         col3 = pygame.sprite.spritecollide(r3,jugadores,False)
-        col4 = pygame.sprite.spritecollide(r4,jugadores,False)
         if colj2:
             if jf2.damage > 0:
                 impacto = True
-                j.velx *= -1
-                j.vely = -2
-                j.vidas -= jf2.damage
+                j.velx *= 0.5
+                j.vely *= 0.5
                 vidas = "Vidas: " + str(j.vidas)
         if col3:
             if r3.estado == 1:
                 impacto = True
                 j.vidas = 0
                 vidas = "Vidas: " + str(j.vidas)
-        if col4:
-            if r4.estado == 1:
-                impacto = True
-                r4.estado = 3
-                j.velx *= -1
-                j.vidas -= r4.damage
-                vidas = "Vidas: " + str(j.vidas)
-                r4.vidas -= 1
+        for r4 in rivales4:
+            col4 = pygame.sprite.spritecollide(r4,jugadores,False)
+            if col4:
+                if r4.estado == 1:
+                    impacto = True
+                    r4.estado = 3
+                    j.velx *= -1
+                    j.vidas -= r4.damage
+                    vidas = "Vidas: " + str(j.vidas)
+                    r4.vidas -= 1
 
         #recoger modificadores
         speed = pygame.sprite.spritecollide(v,jugadores,False)
@@ -371,20 +381,6 @@ def Nivel2(ventana):
                 piedras.remove(pi)
                 pi.damage = 0
 
-        for o in ondas:
-            if o.rect.x < 0 or o.rect.x > ANCHO:
-                ondas.remove(o)
-                o.damage = 0
-            on = pygame.sprite.spritecollide(o,jugadores,False)
-            if on:
-                if o.damage > 0:
-                    impacto = True
-                    j.velx *= -1
-                    j.aturdido = 1
-                    ondas.remove(o)
-                    o.damage = 0
-            j.aturdir()
-
         for r3 in rivales3:
             r3.morir()
             if r3.estado == 2:
@@ -408,7 +404,6 @@ def Nivel2(ventana):
         monumentos.update()
         jugadores.update()
         balas.update()
-        ondas.update()
         piedras.update()
         rivales3.update()
         rivales4.update()
@@ -428,7 +423,6 @@ def Nivel2(ventana):
         suelos.draw(ventana)
         rivales3.draw(ventana)
         rivales4.draw(ventana)
-        ondas.draw(ventana)
         piedras.draw(ventana)
         gen.draw(ventana)
         balas.draw(ventana)

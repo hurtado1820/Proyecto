@@ -38,9 +38,9 @@ class Jugador(pygame.sprite.Sprite):
 
     def gravedad(self):
         if self.vely ==  0:
-            self.vely = 0.5
+            self.vely = 1
         else:
-            self.vely += 0.5
+            self.vely += 1
 
     def update(self):
         #Colision en x
@@ -128,8 +128,8 @@ class Jugador(pygame.sprite.Sprite):
         #self.animar()
 
     def RetPos(self):
-        x = (self.rect.x) + 10
-        y = self.rect.y + 20
+        x = self.rect.x
+        y = self.rect.y + 5
         return [x,y]
 
     def detener(self):
