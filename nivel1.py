@@ -306,13 +306,15 @@ def Nivel1(ventana):
                     j.vidas -= r2.damage
                     j.velx *= -1
                     vidas = "Vidas: " + str(j.vidas)
-        for r2 in rivales2:
-            col2 = pygame.sprite.spritecollide(r2,jugadores,False)
-            if col2:
-                if r2.damage > 0:
+        for pc in pinchos:
+            col3 = pygame.sprite.spritecollide(pc,jugadores,False)
+            if col3:
+                if pc.damage > 0:
                     impacto = True
-                    j.vidas -= r2.damage
+                    j.vidas -= pc.damage
                     j.velx *= -1
+                    j.vely *= -1
+                    pc.damage = 0
                     vidas = "Vidas: " + str(j.vidas)
         if colj:
             if jf.damage > 0:
@@ -320,6 +322,8 @@ def Nivel1(ventana):
                 j.vidas -= jf.damage
                 j.velx *= -1
                 vidas = "Vidas: " + str(j.vidas)
+        if pin:
+            if p
 
 
 

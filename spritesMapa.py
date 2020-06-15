@@ -72,7 +72,7 @@ class Muro(pygame.sprite.Sprite):
         if num == 21:
             self.image = pygame.image.load("resources/l.png")
         if num == 24:
-            self.image = pygame.image.load("resources/o.png")                         
+            self.image = pygame.image.load("resources/o.png")
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
@@ -94,6 +94,7 @@ class Pincho(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+        self.damage = 1
         self.f_velxs = 0
         self.f_velys = 0
 
