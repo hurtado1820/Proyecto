@@ -14,7 +14,7 @@ from jefe2 import *
 def Nivel2(ventana):
     pygame.font.init()
 
-    fondo = pygame.image.load("fondo.jpg")
+    fondo = pygame.image.load("background.png")
     ventana.blit(fondo,[0,0])
 
     #Info mapa en x
@@ -49,7 +49,9 @@ def Nivel2(ventana):
     pinchos = pygame.sprite.Group()
     puentes = pygame.sprite.Group()
     plataformas = pygame.sprite.Group()
+    vacios = pygame.sprite.Group()
     monumentos = pygame.sprite.Group()
+    gemas = pygame.sprite.Group()
 
     #sabanas y recortes
     en3_spr = pygame.image.load("enemigo3.png")
@@ -76,7 +78,7 @@ def Nivel2(ventana):
             fila3.append(cuadro3)
         jef2.append(fila3)
 
-    CargaMapa2(suelos,plataformas,muros,pinchos,puentes)
+    CargaMapa2(suelos,plataformas,muros,pinchos,puentes,vacios)
 
     #Creacion personajes
     j = Jugador([50,100])
@@ -130,9 +132,8 @@ def Nivel2(ventana):
         jf2.mover()
 
     fin=False
-    fin_juego = False
     reloj = pygame.time.Clock()
-    while (not fin) and (not fin_juego):
+    while not fin:
         #Control del Tiempo
         n =  time.time()
         if n < alarm:
@@ -140,7 +141,8 @@ def Nivel2(ventana):
             restante = "Tiempo: " + str(tiempo) + "sg"
             info_restante = info_t.render(restante,True,BLANCO)
         else:
-            fin_juego = True
+            fin = True
+            return 1
         #movimiento del jugador
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -148,31 +150,27 @@ def Nivel2(ventana):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     if j.estado == 1:
-                        j.velx = 5
-                        j.dir = 1
-                    if j.estado == 2:
                         j.velx = 7
-                        j.dir = 1
+                    if j.estado == 2:
+                        j.velx = 10
                     if j.estado == 4:
-                        j.velx = 2
-                        j.dir=1
+                        j.velx = 5
+                    j.dir=1
                 if event.key  == pygame.K_LEFT:
                     if j.estado == 1:
-                        j.velx = -5
-                        j.dir = 2
-                    if j.estado == 2:
                         j.velx = -7
-                        j.dir = 2
+                    if j.estado == 2:
+                        j.velx = -10
                     if j.estado == 4:
-                        j.velx = -2
-                        j.dir= 2
+                        j.velx = -5
+                    j.dir= 2
                 if event.key == pygame.K_SPACE:
                     if j.estado == 1:
-                        j.vely = -7
+                        j.vely = -12
                     if j.estado == 2:
-                        j.vely = -10
+                        j.vely = -16
                     if j.estado == 4:
-                        j.vely = -4
+                        j.vely = -10
                     j.piso = False
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
@@ -268,6 +266,9 @@ def Nivel2(ventana):
         for mon in monumentos:
             mon.f_velxs = f_velx
             mon.f_velys = f_vely
+        for va in vacios:
+            va.f_velxs = f_velx
+            va.f_velys = f_vely
 
         #Control del jefe, se remueve al morir, controla los generadores de piedras
         for jf2 in jefe2:
@@ -348,6 +349,7 @@ def Nivel2(ventana):
         speed = pygame.sprite.spritecollide(v,jugadores,False)
         sal = pygame.sprite.spritecollide(s,jugadores,False)
         monu = pygame.sprite.spritecollide(j,monumentos,False)
+        ge = pygame.sprite.spritecollide(j,gemas,True)
 
         if speed:
             boost.remove(v)
@@ -361,9 +363,18 @@ def Nivel2(ventana):
 
         if monu:
             if j.inventario[0] > 0:
-                fin_juego = True
-                victoria = True
+                fin = True
                 j.inventario[0] = 0
+                return 0
+
+        if ge:
+            j.inventario[0] = 1
+
+        #Muere al tocar el vacio
+        muer =  pygame.sprite.spritecollide(j,vacios,False)
+        if muer:
+            j.vidas = 0
+            return 1
 
         #Control piedras generadas por jefe
         for pi in piedras:
@@ -396,8 +407,8 @@ def Nivel2(ventana):
         vidas = "Vidas: " + str(j.vidas)
         if j.estado==5:
             jugadores.remove(j)
-            fin_juego = True
-            victoria = False
+            fin = True
+            return 1
 
         #Refresco
         #Update
@@ -414,6 +425,7 @@ def Nivel2(ventana):
         muros.update()
         puentes.update()
         pinchos.update()
+        vacios.update()
         boost.update()
         health.update()
         #Dibujo fondo
@@ -431,6 +443,7 @@ def Nivel2(ventana):
         jugadores.draw(ventana)
         jefe2.draw(ventana)
         plataformas.draw(ventana)
+        vacios.draw(ventana)
         muros.draw(ventana)
         puentes.draw(ventana)
         pinchos.draw(ventana)
@@ -449,13 +462,3 @@ def Nivel2(ventana):
         #Movimiento fondo
         f_posx += f_velx
         f_posy += f_vely
-
-    #Perdida
-    while (not fin) and (not victoria):
-        ventana.fill(AZUL)
-        pygame.display.flip()
-
-    #Victoria
-    while (not fin) and (victoria):
-        ventana.fill(ROJO)
-        pygame.display.flip()

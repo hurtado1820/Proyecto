@@ -40,7 +40,7 @@ class Jugador(pygame.sprite.Sprite):
         if self.vely ==  0:
             self.vely = 1
         else:
-            self.vely += 1
+            self.vely += 2
 
     def update(self):
         #Colision en x

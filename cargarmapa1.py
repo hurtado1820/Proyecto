@@ -3,7 +3,7 @@ from spritesMapa import *
 import configparser
 from const import *
 
-def CargaMapa1(suelos,plataformas,muros,pinchos,puentes):
+def CargaMapa1(suelos,plataformas,muros,pinchos,puentes,vacios):
 
     archivo = configparser.ConfigParser()
     archivo.read("level-one.map")
@@ -32,5 +32,8 @@ def CargaMapa1(suelos,plataformas,muros,pinchos,puentes):
             if tipo == "puente":
                 pue = Puente([48*i,48*j],spr)
                 puentes.add(pue)
+            if tipo == "vacio":
+                va = Vacio([48*i,48*j])
+                vacios.add(va)    
             i += 1
         j += 1

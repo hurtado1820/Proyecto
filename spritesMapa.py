@@ -121,3 +121,18 @@ class Puente(pygame.sprite.Sprite):
    def update(self):
         self.rect.x += self.f_velxs
         self.rect.y += self.f_velys
+
+
+class Vacio(pygame.sprite.Sprite):
+   def __init__(self,pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("resources/z.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.f_velxs = 0
+        self.f_velys = 0
+
+   def update(self):
+        self.rect.x += self.f_velxs
+        self.rect.y += self.f_velys

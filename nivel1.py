@@ -12,7 +12,7 @@ from spritesMapa import *
 def Nivel1(ventana):
     pygame.font.init()
 
-    fondo = pygame.image.load("fondo.jpg")
+    fondo = pygame.image.load("background.png")
     ventana.blit(fondo,[0,0])
 
     #Info mapa en x
@@ -47,7 +47,9 @@ def Nivel1(ventana):
     proyectiles = pygame.sprite.Group()
     pinchos = pygame.sprite.Group()
     puentes = pygame.sprite.Group()
+    vacios = pygame.sprite.Group()
     monumentos = pygame.sprite.Group()
+    gemas = pygame.sprite.Group()
 
     #sabanas y recortes
     en1_spr = pygame.image.load("enemigo1.png")
@@ -68,7 +70,7 @@ def Nivel1(ventana):
             fila1.append(cuadro1)
         jef1.append(fila1)
 
-    CargaMapa1(suelos,plataformas,muros,pinchos,puentes)
+    CargaMapa1(suelos,plataformas,muros,pinchos,puentes,vacios)
 
     #Creacion personajes
     j = Jugador([266,90])
@@ -83,8 +85,6 @@ def Nivel1(ventana):
     rivales2.add(r2)
     jf = Jefe1([600,400],jef1)
     jefe.add(jf)
-    monument = Monumento([3000,80])
-    monumentos.add(monument)
 
     #modificadores
     gun = Pistola([960,2112])
@@ -137,6 +137,7 @@ def Nivel1(ventana):
                 j.inventario[3] = 0
             else:
                 fin = True
+                return 1
 
         #control del jugador
         for event in pygame.event.get():
@@ -150,7 +151,7 @@ def Nivel1(ventana):
                     j.velx = -7
                     j.dir=2
                 if event.key == pygame.K_SPACE:
-                    j.vely = -10
+                    j.vely = -12
                     j.piso = False
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
@@ -251,6 +252,9 @@ def Nivel1(ventana):
         for mon in monumentos:
             mon.f_velxs = f_velx
             mon.f_velys = f_vely
+        for va in vacios:
+            va.f_velxs = f_velx
+            va.f_velys = f_vely
 
         for b in balas:
             #Eliminacion de las balas al chocar con bordes y personajes (al impactarlos les baja vida)
@@ -322,15 +326,13 @@ def Nivel1(ventana):
                 j.vidas -= jf.damage
                 j.velx *= -1
                 vidas = "Vidas: " + str(j.vidas)
-        if pin:
-            if p
-
 
 
         #recoger modificadores
         ars = pygame.sprite.spritecollide(gun,jugadores,False)
         tie = pygame.sprite.spritecollide(t,jugadores,False)
         monu = pygame.sprite.spritecollide(j,monumentos,False)
+        ge = pygame.sprite.spritecollide(j,gemas,True)
 
         if ars:
             pistolas.remove(gun)
@@ -344,6 +346,16 @@ def Nivel1(ventana):
             if j.inventario[0] > 0:
                 fin = True
                 j.inventario[0] = 0
+                return 0
+
+        if ge:
+            j.inventario[0] = 1
+
+        #Muere al tocar el vacio
+        muer =  pygame.sprite.spritecollide(j,vacios,False)
+        if muer:
+            j.vidas = 0
+            return 1
 
         #control de muerte de los rivales
         for r1 in rivales1:
@@ -414,6 +426,7 @@ def Nivel1(ventana):
         if j.estado==5:
             jugadores.remove(j)
             fin = True
+            return 1
 
         #Refresco
         #Update
@@ -423,6 +436,7 @@ def Nivel1(ventana):
         muros.update()
         puentes.update()
         pinchos.update()
+        vacios.update()
         jugadores.update()
         rivales1.update()
         rivales2.update()
@@ -442,6 +456,7 @@ def Nivel1(ventana):
         muros.draw(ventana)
         puentes.draw(ventana)
         pinchos.draw(ventana)
+        vacios.draw(ventana)
         rivales1.draw(ventana)
         rivales2.draw(ventana)
         misiles.draw(ventana)
