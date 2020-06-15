@@ -255,6 +255,9 @@ def Nivel1(ventana):
         for va in vacios:
             va.f_velxs = f_velx
             va.f_velys = f_vely
+        for gm in gemas:
+            gm.f_velxs = f_velx
+            gm.f_velys = f_vely
 
         for b in balas:
             #Eliminacion de las balas al chocar con bordes y personajes (al impactarlos les baja vida)
@@ -349,7 +352,7 @@ def Nivel1(ventana):
                 return 0
 
         if ge:
-            j.inventario[0] = 1
+            j.inventario[0] += 1
 
         #Muere al tocar el vacio
         muer =  pygame.sprite.spritecollide(j,vacios,False)
@@ -446,6 +449,7 @@ def Nivel1(ventana):
         jefe.update()
         pistolas.update()
         tiempos.update()
+        gemas.update()
         #Dibujo de fondo
         ventana.blit(fondo,[f_posx,f_posy])
         #Dibujo objetos
@@ -465,12 +469,13 @@ def Nivel1(ventana):
         pistolas.draw(ventana)
         tiempos.draw(ventana)
         jefe.draw(ventana)
+        gemas.draw(ventana)
         #Mensajes
         info_vidas = info_t.render(vidas,True,BLANCO)
         ventana.blit(info_vidas,[190,10])
         ventana.blit(info_restante,[10,10])
         pygame.display.flip()
-        reloj.tick(20)
+        reloj.tick(40)
 
         #Movimiento fondo
         f_posx += f_velx

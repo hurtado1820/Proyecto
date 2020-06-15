@@ -269,6 +269,9 @@ def Nivel2(ventana):
         for va in vacios:
             va.f_velxs = f_velx
             va.f_velys = f_vely
+        for gm in gemas:
+            gm.f_velxs = f_velx
+            gm.f_velys = f_vely
 
         #Control del jefe, se remueve al morir, controla los generadores de piedras
         for jf2 in jefe2:
@@ -368,7 +371,7 @@ def Nivel2(ventana):
                 return 0
 
         if ge:
-            j.inventario[0] = 1
+            j.inventario[0] += 1
 
         #Muere al tocar el vacio
         muer =  pygame.sprite.spritecollide(j,vacios,False)
@@ -428,6 +431,7 @@ def Nivel2(ventana):
         vacios.update()
         boost.update()
         health.update()
+        gemas.update()
         #Dibujo fondo
         ventana.blit(fondo,[f_posx,f_posy])
         #Dibujo objetos
@@ -449,15 +453,13 @@ def Nivel2(ventana):
         pinchos.draw(ventana)
         boost.draw(ventana)
         health.draw(ventana)
-        pygame.display.flip()
-        reloj.tick(20)
-
+        gemas.draw(ventana)
         #Mensajes
         info_vidas = info_t.render(vidas,True,BLANCO)
         ventana.blit(info_vidas,[190,10])
         ventana.blit(info_restante,[10,10])
         pygame.display.flip()
-        reloj.tick(20)
+        reloj.tick(40)
 
         #Movimiento fondo
         f_posx += f_velx
