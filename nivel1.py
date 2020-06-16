@@ -128,8 +128,10 @@ def Nivel1(ventana):
     #modificadores
     gun = Pistola([960,2112])
     pistolas.add(gun)
-    t = Tiempo([4656,1536])
+    t = Tiempo([4645,1536])
     tiempos.add(t)
+    gemaa = Gem1([4460,384])
+    gemas.add(gemaa)
 
     bj = BarraJugador([170,5],barra)
     barrajug.add(bj)
@@ -337,9 +339,12 @@ def Nivel1(ventana):
                 r2.damage = 0
                 balas.remove(b)
             for jf in dispj:
-                jf.vidas -= 1
-                bjf.nivel = jf.vidas - 1
-                balas.remove(b)
+                if jf.vidas > 0:
+                    jf.vidas -= 1
+                    bjf.nivel = jf.vidas - 1
+                    balas.remove(b)
+                else:
+                    jf.vidas -= 1
             for pr in dispr:
                 proyectiles.remove(pr)
                 pr.damage = 0
@@ -403,7 +408,7 @@ def Nivel1(ventana):
 
         if tie:
             tiempo.remove(t)
-            j.inventario[3] = 1
+            j.inventario[3] += 1
 
         if monu:
             if j.inventario[0] > 0:
@@ -444,7 +449,9 @@ def Nivel1(ventana):
 
         for jf in jefe:
             jf.morir()
-            if jf.estado == 3:
+            if jf.estado == 2:
+                monum = Monumento(jf.rect)
+                monumentos.add(monum)
                 jefe.remove(jf)
                 barrajef1.remove(bjf)
                 jf.damage = 0
@@ -548,7 +555,7 @@ def Nivel1(ventana):
         #ventana.blit(info_vidas,[190,10])
         ventana.blit(info_restante,[10,10])
         pygame.display.flip()
-        reloj.tick(40)
+        reloj.tick(60)
 
         #Movimiento fondo
         f_posx += f_velx

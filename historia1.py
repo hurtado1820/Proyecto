@@ -1,8 +1,8 @@
 import pygame
 
-def Victoria(ventana):
+def H1(ventana):
 
-    fondo = pygame.image.load("hist3.jpg")
+    fondo = pygame.image.load("hist1.jpg")
     fin = False
     reloj = pygame.time.Clock()
 
@@ -11,7 +11,8 @@ def Victoria(ventana):
             if event.type == pygame.QUIT:
                 fin = True
             if event.type == pygame.KEYDOWN:
-                fin = True
+                if event.key == pygame.K_SPACE:
+                    fin = True
         ventana.blit(fondo,[0,0])
         pygame.display.flip()
         reloj.tick(20)

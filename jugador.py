@@ -19,7 +19,7 @@ class Jugador(pygame.sprite.Sprite):
         self.vely = 0
         self.vidas = 6
         self.aturdido = 0
-        self.arma = 0
+        self.arma = 0 
         self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 aturdido, 5 muerto
         self.muros = None
         self.suelos = None
@@ -148,11 +148,6 @@ class Jugador(pygame.sprite.Sprite):
              self.aturdido = 0
              self.estado = 2
              self.inventario[2] -= 1
-
-    #cuando tiene ambos objetos pasa al estado 5 (en el que puede ganar?)
-    def gemas(self):
-        if self.inventario[0] == 2:
-            self.estado = 3
 
     # Muerte ; cuando las vidas llegan a 0
     def morir(self):

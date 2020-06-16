@@ -114,7 +114,7 @@ def Nivel2(ventana):
     jefe2.add(jf2)
     bjf2 = BarraJefe2([2024,435],barra)
     barrajef2.add(bjf2)
-    monument = Monumento([3000,80])
+    monument = Monumento([1720,480])
     monumentos.add(monument)
 
     #Stop
@@ -142,7 +142,7 @@ def Nivel2(ventana):
     gen.add(g6)
 
     #modificadores
-    v = Boost([560,345])
+    v = Boost([560,385])
     boost.add(v)
     s = Salud([2352,1968])
     health.add(s)
@@ -342,6 +342,8 @@ def Nivel2(ventana):
         for jf2 in jefe2:
             jf2.morir()
             if jf2.estado == 3:
+                gemal = Gem2(jf2.rect)
+                gemas.add(gemal)
                 jefe2.remove(jf2)
                 barrajef2.remove(bjf2)
                 jf2.damage = 0
@@ -380,12 +382,12 @@ def Nivel2(ventana):
                     balas.remove(b)
                     ex = Explode(pos_ex,exp)
                     explosiones.add(ex)
-            for jf2 in dispj2:
+            '''for jf2 in dispj2:
                 if jf2.estado < 3:
                     jf2.vidas -= 1
                     half = round(jf2.vidas / 2)
                     bjf2.nivel = half - 1
-                    balas.remove(b)
+                    balas.remove(b)'''
             for pi in piedras:
                 piedras.remove(pi)
                 pi.damage = 0
@@ -495,6 +497,7 @@ def Nivel2(ventana):
         for ex in explosiones:
             if ex.estado == 2:
                 explosiones.remove(ex)
+
         j.morir()
         #vidas = "Vidas: " + str(j.vidas)
         if j.estado==5:
@@ -525,6 +528,7 @@ def Nivel2(ventana):
         explosiones.update()
         barrajug.update()
         barrajef2.update()
+        lava.update()
         #Dibujo fondo
         ventana.blit(fondo,[f_posx,f_posy])
         #Dibujo objetos
@@ -551,6 +555,7 @@ def Nivel2(ventana):
         gemas.draw(ventana)
         barrajug.draw(ventana)
         barrajef2.draw(ventana)
+        lava.draw(ventana)
         #Mensajes
         #info_vidas = info_t.render(vidas,True,BLANCO)
         #ventana.blit(info_vidas,[190,10])

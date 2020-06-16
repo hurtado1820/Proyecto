@@ -1,6 +1,7 @@
 import pygame
 
 def Inicio(ventana):
+    #fondo = pygame.image.load("")
     fin = False
     reloj = pygame.time.Clock()
     while not fin:
