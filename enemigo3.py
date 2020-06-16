@@ -29,27 +29,23 @@ class Enemigo3(Enemigo):
 
     def gravedad(self):
         if self.vely ==  0:
-            self.vely = 0.3
+            self.vely = 2
         else:
-            self.vely += 0.3
+            self.vely += 2
 
     def detener(self):
         self.velx=0
         self.vely=0
 
     def mover(self):
-        self.velx = 2
-
-    def morir(self):
-        if self.rect.bottom == ALTO:
-            self.estado = 2
-            self.detener()
+        self.velx = 3
 
     def update(self):
         #Colision en x
         self.mover()
+        self.rect.x += self.f_velxs
+        self.rect.y += self.f_velys
         self.rect.x += self.velx
-        #Colision en y
         self.rect.y += self.vely
         ls_col = pygame.sprite.spritecollide(self,self.plataformas,False)
         for b in ls_col:

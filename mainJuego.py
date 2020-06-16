@@ -15,7 +15,7 @@ if __name__ == '__main__':
     reloj = pygame.time.Clock()
     Inicio(ventana)
     H1(ventana)
-    primer = Nivel1(ventana)
+    primer = Nivel2(ventana)
     # 1 perdio 0 gano
     if primer == 1:
         Perdida(ventana)

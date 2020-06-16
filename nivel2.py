@@ -102,17 +102,17 @@ def Nivel2(ventana):
     CargaMapa2(suelos,plataformas,muros,pinchos,puentes,lava,vacios)
 
     #Creacion personajes
-    j = Jugador([350,200])
+    j = Jugador([400,200])
     jugadores.add(j)
     r3 = Enemigo3([250,30],en3)
     rivales3.add(r3)
-    r4a = Enemigo4([4320,427],en4)
+    r4a = Enemigo4([4212,427],en4)
     rivales4.add(r4a)
-    r4b = Enemigo4([4320,235],en4)
+    r4b = Enemigo4([3076,334],en4)
     rivales4.add(r4b)
     jf2 = Jefe2([2074,485],jef2)
     jefe2.add(jf2)
-    bjf2 = BarraJefe2([2024,435],barra)
+    bjf2 = BarraJefe2([2074,435],barra)
     barrajef2.add(bjf2)
     monument = Monumento([1720,480])
     monumentos.add(monument)
@@ -144,7 +144,7 @@ def Nivel2(ventana):
     #modificadores
     v = Boost([560,385])
     boost.add(v)
-    s = Salud([2352,1968])
+    s = Salud([2796,1776])
     health.add(s)
 
     bj = BarraJugador([170,5],barra)
@@ -232,11 +232,9 @@ def Nivel2(ventana):
                     if j.dir == 1:
                         b.velx = 15
                         b.vely = 0
-                        #j.accion = 3
                     if j.dir == 2:
                         b.velx = -15
                         b.vely = 0
-                        #j.accion = 7
                     balas.add(b)
             if event.type == pygame.KEYUP:
                 j.velx = 0
@@ -289,6 +287,9 @@ def Nivel2(ventana):
         for na in nada:
             na.f_velxs = f_velx
             na.f_velys = f_vely
+        for ri3 in rivales3:
+            ri3.f_velxs = f_velx
+            ri3.f_velys = f_vely
         for ri in rivales4:
             ri.f_velxs = f_velx
             ri.f_velys = f_vely
@@ -318,7 +319,7 @@ def Nivel2(ventana):
             pie.f_velys = f_vely
         for ge in gen:
             ge.f_velxs = f_velx
-            pue.f_velys = f_vely
+            ge.f_velys = f_vely
         for mon in monumentos:
             mon.f_velxs = f_velx
             mon.f_velys = f_vely
@@ -343,8 +344,8 @@ def Nivel2(ventana):
             jf2.morir()
             if jf2.estado == 3:
                 gemal = Gem2(jf2.rect)
-                gemas.add(gemal)
                 jefe2.remove(jf2)
+                gemas.add(gemal)
                 barrajef2.remove(bjf2)
                 jf2.damage = 0
                 for g in gen:
@@ -382,12 +383,12 @@ def Nivel2(ventana):
                     balas.remove(b)
                     ex = Explode(pos_ex,exp)
                     explosiones.add(ex)
-            '''for jf2 in dispj2:
+            for jf2 in dispj2:
                 if jf2.estado < 3:
                     jf2.vidas -= 1
                     half = round(jf2.vidas / 2)
                     bjf2.nivel = half - 1
-                    balas.remove(b)'''
+                    balas.remove(b)
             for pi in piedras:
                 piedras.remove(pi)
                 pi.damage = 0
@@ -403,12 +404,16 @@ def Nivel2(ventana):
             if jf2.damage > 0:
                 impacto = True
                 j.velx *= 0.2
-                j.vely = -1
+                j.vely = -3
                 #vidas = "Vidas: " + str(j.vidas)
         if col3:
             if r3.estado == 1:
                 impacto = True
-                j.vidas = 0
+                j.vidas -= r3.damage
+                bj.nivel = j.vidas - 1
+                r3.vely = -1
+                j.velx = 5
+                r3.damage = 0
                 #vidas = "Vidas: " + str(j.vidas)
         for r4 in rivales4:
             col4 = pygame.sprite.spritecollide(r4,jugadores,False)
@@ -433,7 +438,7 @@ def Nivel2(ventana):
                      bj.nivel = j.vidas - 1
                      j.velx *= -1
                      j.vely *= -1
-                     pc.damage = 0
+                     lv.damage = 0
                      #vidas = "Vidas: " + str(j.vidas)
 
         #recoger modificadores
@@ -466,6 +471,7 @@ def Nivel2(ventana):
         muer =  pygame.sprite.spritecollide(j,vacios,False)
         if muer:
             j.vidas = 0
+            fin = True
             return 1
 
         #Control piedras generadas por jefe
@@ -474,8 +480,8 @@ def Nivel2(ventana):
                 piedras.remove(pi)
                 pi.damage = 0
             pied = pygame.sprite.spritecollide(pi,jugadores,False)
-            plat = pygame.sprite.spritecollide(pi,plataformas,False)
-            if plat:
+            suel = pygame.sprite.spritecollide(pi,suelos,False)
+            if suel:
                 piedras.remove(pi)
                 pi.damage = 0
             if pied:
@@ -485,11 +491,6 @@ def Nivel2(ventana):
                 piedras.remove(pi)
                 pi.damage = 0
 
-        for r3 in rivales3:
-            r3.morir()
-            if r3.estado == 2:
-                rivales3.remove(r3)
-
         for r4 in rivales4:
             if r4.estado == 2:
                 rivales4.remove(r4)
@@ -497,6 +498,11 @@ def Nivel2(ventana):
         for ex in explosiones:
             if ex.estado == 2:
                 explosiones.remove(ex)
+
+        for r3 in rivales3:
+            col3p = pygame.sprite.spritecollide(r3,puentes,False)
+            rivales3.remove(r3)
+            r3.damage = 0
 
         j.morir()
         #vidas = "Vidas: " + str(j.vidas)

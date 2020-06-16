@@ -21,7 +21,7 @@ class Jefe2(Enemigo):
         self.f_velys = 0
         self.radius = 60
         self.x = pos[0]
-        self.vidas = 8
+        self.vidas = 12
         self.damage = 1
         self.stop = None
         self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
@@ -58,5 +58,5 @@ class Jefe2(Enemigo):
         self.image = self.animacion[self.accion][self.con]
 
     def mover(self):
-        self.velx = 5
+        self.velx = 8
         self.estado = 2

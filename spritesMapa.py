@@ -128,6 +128,7 @@ class Lava(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+        self.damage = 1
         self.f_velxs = 0
         self.f_velys = 0
 

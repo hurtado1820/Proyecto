@@ -14,7 +14,10 @@ class BarraJugador(pygame.sprite.Sprite):
         self.rect.y = pos[1]
 
     def update(self):
-        self.nivel = self.nivel
+        if self.nivel > 5:
+            self.nivel = 5
+        else:
+            self.nivel = self.nivel
         self.image = self.animacion[self.nivel]
 
 class BarraJefe1(pygame.sprite.Sprite):
@@ -79,4 +82,4 @@ class BarraJefe2(pygame.sprite.Sprite):
         self.image = self.animacion[self.nivel]
 
     def mover(self):
-        self.velx = 7
+        self.velx = 8
