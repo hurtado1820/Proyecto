@@ -23,6 +23,7 @@ class Jefe2(Enemigo):
         self.x = pos[0]
         self.vidas = 8
         self.damage = 1
+        self.stop = None
         self.estado = 1 # 1 estándar, 2 rondando, 3 muerto
         self.temp = random.randrange(100)
 
@@ -30,19 +31,21 @@ class Jefe2(Enemigo):
         if self.vidas <= 0:
             self.estado = 3
 
+    def rebotar(self):
+        ls_col = pygame.sprite.spritecollide(self,self.stop,False)
+        if ls_col:
+            self.velx *= -1
+
     def camino(self):
         if self.velx != 0:
             if self.velx < 0:
-                self.accion = 1
-            else:
                 self.accion = 0
+            else:
+                self.accion = 1
 
     def update(self):
         #Colision en x
-        if self.rect.x > self.x + 200:
-            self.velx = -3
-        elif self.rect.x < self.x -200:
-            self.velx = 3
+        self.rebotar()
         self.rect.x += self.velx
         self.rect.x += self.f_velxs
         self.rect.y += self.f_velys
@@ -55,5 +58,5 @@ class Jefe2(Enemigo):
         self.image = self.animacion[self.accion][self.con]
 
     def mover(self):
-        self.velx = 3
+        self.velx = 5
         self.estado = 2

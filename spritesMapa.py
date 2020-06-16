@@ -25,7 +25,6 @@ class Suelo(pygame.sprite.Sprite):
         self.rect.x += self.f_velxs
         self.rect.y += self.f_velys
 
-
 class Plataforma(pygame.sprite.Sprite):
    def __init__(self,pos,num):
         pygame.sprite.Sprite.__init__(self)
@@ -112,6 +111,20 @@ class Puente(pygame.sprite.Sprite):
             self.image = pygame.image.load("resources/u.png")
         if num == 31:
             self.image = pygame.image.load("resources/v.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.f_velxs = 0
+        self.f_velys = 0
+
+   def update(self):
+        self.rect.x += self.f_velxs
+        self.rect.y += self.f_velys
+
+class Lava(pygame.sprite.Sprite):
+   def __init__(self,pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("resources/y.png")
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]

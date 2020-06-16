@@ -50,8 +50,7 @@ class Tiempo(pygame.sprite.Sprite):
 class Pistola(pygame.sprite.Sprite):
     def __init__(self,pos):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([15,15])
-        self.image.fill(MORADO)
+        self.image = pygame.image.load("pistola.png")
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]

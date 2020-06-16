@@ -7,8 +7,9 @@ class Enemigo4(Enemigo):
    def __init__ (self,pos,m):
         pygame.sprite.Sprite.__init__(self)
         self.con = 0
+        self.accion = 0
         self.animacion = m
-        self.image = pygame.image.load("mineturtle.png")
+        self.image = self.animacion[self.accion][self.con]
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
@@ -24,10 +25,18 @@ class Enemigo4(Enemigo):
    def update(self):
        self.rect.x += self.f_velxs
        self.rect.y += self.f_velys
-       '''if self.estado == 1:
-           self.image = pygame.image.load("mineturtle.png")
-       else:'''
+       if self.accion < 3:
+           self.accion += 1
+           if self.con < 3:
+               self.con += 1
+           else:
+               self.con = 0
+               self.accion = self.accion
+           self.image = self.animacion[self.accion][self.con]
+       else:
+           self.accion = 0
+
 
    def morir(self):
        if self.vidas <= 0:
-           self.estado = 3
+           self.estado = 2

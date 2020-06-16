@@ -17,7 +17,7 @@ class Jugador(pygame.sprite.Sprite):
         self.dir = 1 #1: derecha, 2:izquierda
         self.velx = 0
         self.vely = 0
-        self.vidas = 5
+        self.vidas = 20
         self.aturdido = 0
         self.arma = 0
         self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 aturdido, 5 muerto
@@ -38,9 +38,9 @@ class Jugador(pygame.sprite.Sprite):
 
     def gravedad(self):
         if self.vely ==  0:
-            self.vely = 1
+            self.vely = 0.5
         else:
-            self.vely += 2
+            self.vely += 0.5
 
     def update(self):
         #Colision en x

@@ -49,6 +49,7 @@ def Nivel1(ventana):
     puentes = pygame.sprite.Group()
     vacios = pygame.sprite.Group()
     monumentos = pygame.sprite.Group()
+    nada = pygame.sprite.Group()
     gemas = pygame.sprite.Group()
 
     #sabanas y recortes
@@ -77,14 +78,28 @@ def Nivel1(ventana):
     jugadores.add(j)
     r1 = Enemigo1([720,240],en1)
     rivales1.add(r1)
-    r1 = Enemigo1([912,670],en1)
+    r1 = Enemigo1([2544,670],en1)
     rivales1.add(r1)
-    r2 = Enemigo2([4220,1104])
+    r2 = Enemigo2([4120,1114])
     rivales2.add(r2)
-    r2 = Enemigo2([4220,816])
+    r2 = Enemigo2([4120,826])
     rivales2.add(r2)
-    jf = Jefe1([600,400],jef1)
+    jf = Jefe1([2100,332],jef1)
     jefe.add(jf)
+
+    #Stop
+    n1=Stop([570,240])
+    nada.add(n1)
+    n2=Stop([870,240])
+    nada.add(n2)
+    n3=Stop([2244,670])
+    nada.add(n3)
+    n4=Stop([2844,670])
+    nada.add(n4)
+    n5=Stop([1800,346])
+    nada.add(n5)
+    n6=Stop([3300,332])
+    nada.add(n6)
 
     #modificadores
     gun = Pistola([960,2112])
@@ -98,6 +113,9 @@ def Nivel1(ventana):
     j.muros = muros
     jf.suelos = suelos
     jf.pared = muros
+    jf.stop = nada
+    for r1 in rivales1:
+        r1.stop = nada
 
     #Texto control vida jugador
     info = pygame.font.Font(None,30)
@@ -216,9 +234,12 @@ def Nivel1(ventana):
         for bal in balas:
             bal.f_velxs = f_velx
             bal.f_velys = f_vely
+        for na in nada:
+            na.f_velxs = f_velx
+            na.f_velys = f_vely
         for riv in rivales1:
-            riv.f_velxs = f_velx
             riv.f_velys = f_vely
+            riv.f_velxs = f_velx
         for ri in rivales2:
             ri.f_velxs = f_velx
             ri.f_velys = f_vely
@@ -232,8 +253,8 @@ def Nivel1(ventana):
             tiem.f_velxs = f_velx
             tiem.f_velys = f_vely
         for je in jefe:
-            je.f_velxs = f_velx
             je.f_velys = f_vely
+            je.f_velxs = f_velx
         for sue in suelos:
             sue.f_velxs = f_velx
             sue.f_velys = f_vely
@@ -373,7 +394,7 @@ def Nivel1(ventana):
                 r2.temp = -1
                 r2.damage = 0
             if r2.temp < 0:
-                direccion = random.randrange(500)
+                direccion = random.randrange(250)
                 m = Misil(r2.rect)
                 if direccion < 125:
                     m.velx = 5
@@ -422,6 +443,10 @@ def Nivel1(ventana):
                     j.vidas -= 1
                     proyectiles.remove(pr)
                     pr.damage = 0
+            prym = pygame.sprite.spritecollide(pr,muros,False)
+            if prym:
+                proyectiles.remove(pr)
+                pr.damage = 0
 
         #muerte del jugador
         j.morir()
@@ -450,11 +475,13 @@ def Nivel1(ventana):
         pistolas.update()
         tiempos.update()
         gemas.update()
+        nada.update()
         #Dibujo de fondo
         ventana.blit(fondo,[f_posx,f_posy])
         #Dibujo objetos
         monumentos.draw(ventana)
         suelos.draw(ventana)
+        nada.draw(ventana)
         proyectiles.draw(ventana)
         plataformas.draw(ventana)
         muros.draw(ventana)
