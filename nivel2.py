@@ -142,7 +142,7 @@ def Nivel2(ventana):
     gen.add(g6)
 
     #modificadores
-    v = Boost([560,385])
+    v = Boost([766,750])
     boost.add(v)
     s = Salud([2796,1776])
     health.add(s)
@@ -501,8 +501,9 @@ def Nivel2(ventana):
 
         for r3 in rivales3:
             col3p = pygame.sprite.spritecollide(r3,puentes,False)
-            rivales3.remove(r3)
-            r3.damage = 0
+            if col3p:
+                rivales3.remove(r3)
+                r3.damage = 0
 
         j.morir()
         #vidas = "Vidas: " + str(j.vidas)
