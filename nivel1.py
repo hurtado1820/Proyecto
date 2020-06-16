@@ -8,6 +8,7 @@ import random
 import time
 from cargarmapa1 import *
 from spritesMapa import *
+from barras import *
 
 def Nivel1(ventana):
     pygame.font.init()
@@ -51,6 +52,8 @@ def Nivel1(ventana):
     monumentos = pygame.sprite.Group()
     nada = pygame.sprite.Group()
     gemas = pygame.sprite.Group()
+    barrajug = pygame.sprite.Group()
+    barrajef1 = pygame.sprite.Group()
 
     #sabanas y recortes
     en1_spr = pygame.image.load("enemigo1.png")
@@ -71,6 +74,21 @@ def Nivel1(ventana):
             fila1.append(cuadro1)
         jef1.append(fila1)
 
+    boom_spr = pygame.image.load("explosion.png")
+    exp = []
+    for f2 in range(2):
+        fila2=[]
+        for c2 in range(5):
+            cuadro2 = boom_spr.subsurface(70*c2,66*f2,70,66)
+            fila2.append(cuadro2)
+        exp.append(fila2)
+
+    bar_spr = pygame.image.load("bar.png")
+    barra = []
+    for f4 in range(6):
+        cuadro4 = bar_spr.subsurface(106*0,30*f4,106,30)
+        barra.append(cuadro4)
+
     CargaMapa1(suelos,plataformas,muros,pinchos,puentes,vacios)
 
     #Creacion personajes
@@ -80,12 +98,14 @@ def Nivel1(ventana):
     rivales1.add(r1)
     r1 = Enemigo1([2544,670],en1)
     rivales1.add(r1)
-    r2 = Enemigo2([4120,1114])
+    r2 = Enemigo2([4120,1124])
     rivales2.add(r2)
-    r2 = Enemigo2([4120,826])
+    r2 = Enemigo2([4120,836])
     rivales2.add(r2)
     jf = Jefe1([2100,332],jef1)
     jefe.add(jf)
+    bjf = BarraJefe2([2050,282],barra)
+    barrajef1.add(bjf)
 
     #Stop
     n1=Stop([570,240])
@@ -96,9 +116,13 @@ def Nivel1(ventana):
     nada.add(n3)
     n4=Stop([2844,670])
     nada.add(n4)
-    n5=Stop([1800,346])
+    n5=Stop([1800,332])
     nada.add(n5)
     n6=Stop([3300,332])
+    nada.add(n6)
+    n5=Stop([1800,282])
+    nada.add(n5)
+    n6=Stop([3300,282])
     nada.add(n6)
 
     #modificadores
@@ -107,6 +131,9 @@ def Nivel1(ventana):
     t = Tiempo([4656,1536])
     tiempos.add(t)
 
+    bj = BarraJugador([170,5],barra)
+    barrajug.add(bj)
+
     #Sprites con los que colisionan
     j.plataformas = plataformas
     j.suelos = suelos
@@ -114,13 +141,14 @@ def Nivel1(ventana):
     jf.suelos = suelos
     jf.pared = muros
     jf.stop = nada
+    bjf.stop = nada
     for r1 in rivales1:
         r1.stop = nada
 
     #Texto control vida jugador
-    info = pygame.font.Font(None,30)
+    '''info = pygame.font.Font(None,30)
     vidas = "Vidas: " + str(j.vidas)
-    info_vidas = info.render(vidas,True,BLANCO)
+    info_vidas = info.render(vidas,True,BLANCO)'''
 
     #Timer del juego
     cont = 0
@@ -138,6 +166,9 @@ def Nivel1(ventana):
 
     for jf in jefe:
         jf.mover()
+
+    for bjf in barrajef1:
+        bjf.mover()
 
     fin=False
     reloj = pygame.time.Clock()
@@ -279,6 +310,9 @@ def Nivel1(ventana):
         for gm in gemas:
             gm.f_velxs = f_velx
             gm.f_velys = f_vely
+        for bjf1 in barrajef1:
+            bjf1.f_velxs = f_velx
+            bjf1.f_velys = f_vely
 
         for b in balas:
             #Eliminacion de las balas al chocar con bordes y personajes (al impactarlos les baja vida)
@@ -304,6 +338,7 @@ def Nivel1(ventana):
                 balas.remove(b)
             for jf in dispj:
                 jf.vidas -= 1
+                bjf.nivel = jf.vidas - 1
                 balas.remove(b)
             for pr in dispr:
                 proyectiles.remove(pr)
@@ -323,33 +358,37 @@ def Nivel1(ventana):
                 if r1.damage > 0:
                     impacto = True
                     j.vidas -= r1.damage
+                    bj.nivel = j.vidas - 1
                     j.velx *= -1
                     j.vely = 5
-                    vidas = "Vidas: " + str(j.vidas)
+                    #vidas = "Vidas: " + str(j.vidas)
         for r2 in rivales2:
             col2 = pygame.sprite.spritecollide(r2,jugadores,False)
             if col2:
                 if r2.damage > 0:
                     impacto = True
                     j.vidas -= r2.damage
+                    bj.nivel = j.vidas - 1
                     j.velx *= -1
-                    vidas = "Vidas: " + str(j.vidas)
+                    #vidas = "Vidas: " + str(j.vidas)
         for pc in pinchos:
             col3 = pygame.sprite.spritecollide(pc,jugadores,False)
             if col3:
                 if pc.damage > 0:
                     impacto = True
                     j.vidas -= pc.damage
+                    bj.nivel = j.vidas - 1
                     j.velx *= -1
                     j.vely *= -1
                     pc.damage = 0
-                    vidas = "Vidas: " + str(j.vidas)
+                    #vidas = "Vidas: " + str(j.vidas)
         if colj:
             if jf.damage > 0:
                 impacto = True
                 j.vidas -= jf.damage
+                bj.nivel = j.vidas - 1
                 j.velx *= -1
-                vidas = "Vidas: " + str(j.vidas)
+                #vidas = "Vidas: " + str(j.vidas)
 
 
         #recoger modificadores
@@ -407,6 +446,7 @@ def Nivel1(ventana):
             jf.morir()
             if jf.estado == 3:
                 jefe.remove(jf)
+                barrajef1.remove(bjf)
                 jf.damage = 0
             if jf.temp < 0:
                 posj = jf.RetPos()
@@ -430,7 +470,8 @@ def Nivel1(ventana):
             en = pygame.sprite.spritecollide(m,jugadores,False)
             if en:
                 j.vidas -= m.damage
-                vidas = "Vidas: " + str(j.vidas)
+                bj.nivel = j.vidas - 1
+                #vidas = "Vidas: " + str(j.vidas)
                 misiles.remove(m)
                 m.damage = 0
 
@@ -441,6 +482,7 @@ def Nivel1(ventana):
                     impacto = True
                     j.velx *= -1
                     j.vidas -= 1
+                    bj.nivel = j.vidas - 1
                     proyectiles.remove(pr)
                     pr.damage = 0
             prym = pygame.sprite.spritecollide(pr,muros,False)
@@ -450,7 +492,7 @@ def Nivel1(ventana):
 
         #muerte del jugador
         j.morir()
-        vidas = "Vidas: " + str(j.vidas)
+        #vidas = "Vidas: " + str(j.vidas)
         if j.estado==5:
             jugadores.remove(j)
             fin = True
@@ -476,6 +518,8 @@ def Nivel1(ventana):
         tiempos.update()
         gemas.update()
         nada.update()
+        barrajug.update()
+        barrajef1.update()
         #Dibujo de fondo
         ventana.blit(fondo,[f_posx,f_posy])
         #Dibujo objetos
@@ -497,9 +541,11 @@ def Nivel1(ventana):
         tiempos.draw(ventana)
         jefe.draw(ventana)
         gemas.draw(ventana)
+        barrajug.draw(ventana)
+        barrajef1.draw(ventana)
         #Mensajes
-        info_vidas = info_t.render(vidas,True,BLANCO)
-        ventana.blit(info_vidas,[190,10])
+        #info_vidas = info_t.render(vidas,True,BLANCO)
+        #ventana.blit(info_vidas,[190,10])
         ventana.blit(info_restante,[10,10])
         pygame.display.flip()
         reloj.tick(40)

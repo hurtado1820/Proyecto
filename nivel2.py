@@ -10,6 +10,7 @@ import time
 from cargarmapa2 import *
 from spritesMapa import *
 from jefe2 import *
+from barras import *
 
 def Nivel2(ventana):
     pygame.font.init()
@@ -55,6 +56,8 @@ def Nivel2(ventana):
     gemas = pygame.sprite.Group()
     nada = pygame.sprite.Group()
     explosiones = pygame.sprite.Group()
+    barrajug = pygame.sprite.Group()
+    barrajef2 = pygame.sprite.Group()
 
     #sabanas y recortes
     en3_spr = pygame.image.load("enemigo3.png")
@@ -90,10 +93,16 @@ def Nivel2(ventana):
             fila3.append(cuadro3)
         jef2.append(fila3)
 
+    bar_spr = pygame.image.load("bar.png")
+    barra = []
+    for f4 in range(6):
+        cuadro4 = bar_spr.subsurface(106*0,30*f4,106,30)
+        barra.append(cuadro4)
+
     CargaMapa2(suelos,plataformas,muros,pinchos,puentes,lava,vacios)
 
     #Creacion personajes
-    j = Jugador([50,100])
+    j = Jugador([350,200])
     jugadores.add(j)
     r3 = Enemigo3([250,30],en3)
     rivales3.add(r3)
@@ -103,6 +112,8 @@ def Nivel2(ventana):
     rivales4.add(r4b)
     jf2 = Jefe2([2074,485],jef2)
     jefe2.add(jf2)
+    bjf2 = BarraJefe2([2024,435],barra)
+    barrajef2.add(bjf2)
     monument = Monumento([3000,80])
     monumentos.add(monument)
 
@@ -111,19 +122,23 @@ def Nivel2(ventana):
     nada.add(n1)
     n2=Stop([2600,460])
     nada.add(n2)
+    n3=Stop([1500,435])
+    nada.add(n3)
+    n4=Stop([2600,435])
+    nada.add(n4)
 
     #generadores
     g1=Generador([1600,100])
     gen.add(g1)
-    g2=Generador([3168,100])
+    g2=Generador([1800,100])
     gen.add(g2)
     g3=Generador([2000,100])
     gen.add(g3)
-    g4=Generador([2000,100])
+    g4=Generador([2200,100])
     gen.add(g4)
-    g5=Generador([2200,100])
+    g5=Generador([2400,100])
     gen.add(g5)
-    g6=Generador([2400,100])
+    g6=Generador([2600,100])
     gen.add(g6)
 
     #modificadores
@@ -131,6 +146,9 @@ def Nivel2(ventana):
     boost.add(v)
     s = Salud([2352,1968])
     health.add(s)
+
+    bj = BarraJugador([170,5],barra)
+    barrajug.add(bj)
 
 
     #Sprites con los que colisionan
@@ -140,11 +158,12 @@ def Nivel2(ventana):
     jf2.stop = nada
     r3.plataformas = plataformas
     r3.suelos = suelos
+    bjf2.stop = nada
 
     #Texto control vida jugador
-    info = pygame.font.Font(None,30)
+    '''info = pygame.font.Font(None,30)
     vidas = "Vidas: " + str(j.vidas)
-    info_vidas = info.render(vidas,True,BLANCO)
+    info_vidas = info.render(vidas,True,BLANCO)'''
 
     #Timer del juego
     cont = 0
@@ -161,6 +180,9 @@ def Nivel2(ventana):
 
     for jf2 in jefe2:
         jf2.mover()
+
+    for bjf2 in barrajef2:
+        bjf2.mover()
 
     fin=False
     reloj = pygame.time.Clock()
@@ -312,12 +334,16 @@ def Nivel2(ventana):
         for bo in explosiones:
             bo.f_velxs = f_velx
             bo.f_velys = f_vely
+        for bjf in barrajef2:
+            bjf.f_velxs = f_velx
+            bjf.f_velys = f_vely
 
         #Control del jefe, se remueve al morir, controla los generadores de piedras
         for jf2 in jefe2:
             jf2.morir()
             if jf2.estado == 3:
                 jefe2.remove(jf2)
+                barrajef2.remove(bjf2)
                 jf2.damage = 0
                 for g in gen:
                     g.estado = 2
@@ -357,6 +383,8 @@ def Nivel2(ventana):
             for jf2 in dispj2:
                 if jf2.estado < 3:
                     jf2.vidas -= 1
+                    half = round(jf2.vidas / 2)
+                    bjf2.nivel = half - 1
                     balas.remove(b)
             for pi in piedras:
                 piedras.remove(pi)
@@ -374,13 +402,12 @@ def Nivel2(ventana):
                 impacto = True
                 j.velx *= 0.2
                 j.vely = -1
-                jf2.velx *= -1
-                vidas = "Vidas: " + str(j.vidas)
+                #vidas = "Vidas: " + str(j.vidas)
         if col3:
             if r3.estado == 1:
                 impacto = True
                 j.vidas = 0
-                vidas = "Vidas: " + str(j.vidas)
+                #vidas = "Vidas: " + str(j.vidas)
         for r4 in rivales4:
             col4 = pygame.sprite.spritecollide(r4,jugadores,False)
             if col4:
@@ -390,7 +417,8 @@ def Nivel2(ventana):
                     r4.estado = 2
                     j.velx *= -1
                     j.vidas -= r4.damage
-                    vidas = "Vidas: " + str(j.vidas)
+                    bj.nivel = j.vidas - 1
+                    #vidas = "Vidas: " + str(j.vidas)
                     r4.vidas -= 1
                     ex = Explode(pos_ex,exp)
                     explosiones.add(ex)
@@ -400,10 +428,11 @@ def Nivel2(ventana):
                  if lav.damage > 0:
                      impacto = True
                      j.vidas -= lav.damage
+                     bj.nivel = j.vidas - 1
                      j.velx *= -1
                      j.vely *= -1
                      pc.damage = 0
-                     vidas = "Vidas: " + str(j.vidas)
+                     #vidas = "Vidas: " + str(j.vidas)
 
         #recoger modificadores
         speed = pygame.sprite.spritecollide(v,jugadores,False)
@@ -419,6 +448,7 @@ def Nivel2(ventana):
         if sal:
             health.remove(s)
             j.vidas += s.poder
+            bj.nivel = j.vidas - 1
             s.poder = 0
 
         if monu:
@@ -448,7 +478,8 @@ def Nivel2(ventana):
                 pi.damage = 0
             if pied:
                 j.vidas -= pi.damage
-                vidas = "Vidas: " + str(j.vidas)
+                bj.nivel = j.vidas - 1
+                #vidas = "Vidas: " + str(j.vidas)
                 piedras.remove(pi)
                 pi.damage = 0
 
@@ -465,7 +496,7 @@ def Nivel2(ventana):
             if ex.estado == 2:
                 explosiones.remove(ex)
         j.morir()
-        vidas = "Vidas: " + str(j.vidas)
+        #vidas = "Vidas: " + str(j.vidas)
         if j.estado==5:
             jugadores.remove(j)
             fin = True
@@ -492,6 +523,8 @@ def Nivel2(ventana):
         health.update()
         gemas.update()
         explosiones.update()
+        barrajug.update()
+        barrajef2.update()
         #Dibujo fondo
         ventana.blit(fondo,[f_posx,f_posy])
         #Dibujo objetos
@@ -516,9 +549,11 @@ def Nivel2(ventana):
         boost.draw(ventana)
         health.draw(ventana)
         gemas.draw(ventana)
+        barrajug.draw(ventana)
+        barrajef2.draw(ventana)
         #Mensajes
-        info_vidas = info_t.render(vidas,True,BLANCO)
-        ventana.blit(info_vidas,[190,10])
+        #info_vidas = info_t.render(vidas,True,BLANCO)
+        #ventana.blit(info_vidas,[190,10])
         ventana.blit(info_restante,[10,10])
         pygame.display.flip()
         reloj.tick(40)

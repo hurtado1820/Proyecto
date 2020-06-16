@@ -29,9 +29,9 @@ class Enemigo3(Enemigo):
 
     def gravedad(self):
         if self.vely ==  0:
-            self.vely = 1.5
+            self.vely = 0.3
         else:
-            self.vely += 1.5
+            self.vely += 0.3
 
     def detener(self):
         self.velx=0

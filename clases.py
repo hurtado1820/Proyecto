@@ -19,7 +19,7 @@ class Jefe1(Enemigo):
         self.velx = 0
         self.f_velxs = 0
         self.f_velys = 0
-        self.vidas = 5
+        self.vidas = 6
         self.damage = 1
         self.estado = 1 # 1 estándar, 2 muerto
         self.temp = random.randrange(100)
@@ -61,7 +61,7 @@ class Jefe1(Enemigo):
         return [x,y]
 
     def mover(self):
-        self.velx = 5
+        self.velx = 7
         self.estado = 1
 
 #el enemigo2 también es un generador
