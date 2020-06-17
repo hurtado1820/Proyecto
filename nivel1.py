@@ -460,7 +460,7 @@ def Nivel1(ventana):
 
         #recoger modificadores
         ars = pygame.sprite.spritecollide(gun,jugadores,False)
-        tie = pygame.sprite.spritecollide(t,jugadores,False)
+        tie = pygame.sprite.spritecollide(j,tiempos,True)
         monu = pygame.sprite.spritecollide(j,monumentos,False)
         ge = pygame.sprite.spritecollide(j,gemas,True)
 
@@ -469,7 +469,6 @@ def Nivel1(ventana):
             j.arma = 1
 
         if tie:
-            tiempo.remove(t)
             j.inventario[3] += 1
 
         if monu:
