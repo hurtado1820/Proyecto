@@ -84,6 +84,15 @@ def Nivel2(ventana):
             fila2.append(cuadro2)
         exp.append(fila2)
 
+    jug_spr = pygame.image.load("SpritesPlayer.png")
+    ju = []
+    for f in range(6):
+        fila=[]
+        for c in range(14):
+            cuadro4 = jug_spr.subsurface(41*c,30*f,41,30)
+            fila.append(cuadro4)
+        ju.append(fila)
+
     jf2_spr = pygame.image.load("jefe2.png")
     jef2 = []
     for f3 in range(2):
@@ -102,8 +111,9 @@ def Nivel2(ventana):
     CargaMapa2(suelos,plataformas,muros,pinchos,puentes,lava,vacios)
 
     #Creacion personajes
-    j = Jugador([400,200])
+    j = Jugador([400,200],ju)
     jugadores.add(j)
+    j.arma = 1
     r3 = Enemigo3([250,30],en3)
     rivales3.add(r3)
     r4a = Enemigo4([4212,427],en4)
@@ -160,11 +170,6 @@ def Nivel2(ventana):
     r3.suelos = suelos
     bjf2.stop = nada
 
-    #Texto control vida jugador
-    '''info = pygame.font.Font(None,30)
-    vidas = "Vidas: " + str(j.vidas)
-    info_vidas = info.render(vidas,True,BLANCO)'''
-
     #Timer del juego
     cont = 0
     tiempo = 0
@@ -209,6 +214,7 @@ def Nivel2(ventana):
                     if j.estado == 4:
                         j.velx = 5
                     j.dir=1
+                    j.accion = 1
                 if event.key  == pygame.K_LEFT:
                     if j.estado == 1:
                         j.velx = -7
@@ -217,26 +223,58 @@ def Nivel2(ventana):
                     if j.estado == 4:
                         j.velx = -5
                     j.dir= 2
+                    j.accion = 8
                 if event.key == pygame.K_SPACE:
+                    #Estandar
                     if j.estado == 1:
                         j.vely = -12
+                        #Derecha
+                        if j.dir == 1:
+                            j.accion = 2
+                        #Izquierda
+                        if j.dir == 2:
+                            j.accion = 7
+                    #Velocidad
                     if j.estado == 2:
                         j.vely = -16
+                        #Derecha
+                        if j.dir == 1:
+                            j.accion = 2
+                        #Izquierda
+                        if j.dir == 2:
+                            j.accion = 7
+                    #Aturdido
                     if j.estado == 4:
                         j.vely = -10
+                        #Derecha
+                        if j.dir == 1:
+                            j.accion = 2
+                        #Izquierda
+                        if j.dir == 2:
+                            j.accion = 7
                     j.piso = False
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
                     pos = j.RetPos()
                     b = Bala(pos)
+                    #Derecha
                     if j.dir == 1:
                         b.velx = 15
                         b.vely = 0
+                        j.accion = 3
+                    #Izquierda
                     if j.dir == 2:
                         b.velx = -15
                         b.vely = 0
+                        j.accion = 10
                     balas.add(b)
             if event.type == pygame.KEYUP:
+                #Derecha
+                if j.dir == 1:
+                    j.accion = 0
+                #Izquierda
+                if j.dir == 2:
+                    j.accion = 13   
                 j.velx = 0
 
 

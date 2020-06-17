@@ -83,6 +83,15 @@ def Nivel1(ventana):
             fila2.append(cuadro2)
         exp.append(fila2)
 
+    jug_spr = pygame.image.load("SpritesPlayer.png")
+    ju = []
+    for f in range(6):
+        fila=[]
+        for c in range(14):
+            cuadro4 = jug_spr.subsurface(41*c,30*f,41,30)
+            fila.append(cuadro4)
+        ju.append(fila)
+
     bar_spr = pygame.image.load("bar.png")
     barra = []
     for f4 in range(6):
@@ -92,7 +101,7 @@ def Nivel1(ventana):
     CargaMapa1(suelos,plataformas,muros,pinchos,puentes,vacios)
 
     #Creacion personajes
-    j = Jugador([266,90])
+    j = Jugador([266,90],ju)
     jugadores.add(j)
     r1 = Enemigo1([720,240],en1)
     rivales1.add(r1)
@@ -147,11 +156,6 @@ def Nivel1(ventana):
     for r1 in rivales1:
         r1.stop = nada
 
-    #Texto control vida jugador
-    '''info = pygame.font.Font(None,30)
-    vidas = "Vidas: " + str(j.vidas)
-    info_vidas = info.render(vidas,True,BLANCO)'''
-
     #Timer del juego
     cont = 0
     tiempo = 0
@@ -196,32 +200,90 @@ def Nivel1(ventana):
                 fin = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    j.velx = 7
+                    #Movimiento sin arma
+                    if j.arma == 0:
+                        j.velx = 7
+                        j.accion = 5
+                    #Movimiento con arma
+                    if j.arma == 1:
+                        j.velx = 7
+                        j.accion = 1
                     j.dir=1
                 if event.key  == pygame.K_LEFT:
-                    j.velx = -7
+                    #Movimiento sin arma
+                    if j.arma == 0:
+                        j.velx = -7
+                        j.accion = 12
+                    #Movimiento con arma
+                    if j.arma == 1:
+                        j.velx = -7
+                        j.accion = 8
                     j.dir=2
                 if event.key == pygame.K_SPACE:
-                    j.vely = -12
-                    j.piso = False
+                    #Salto con arma
+                    if j.arma == 1:
+                        #Derecha
+                        if j.dir == 1:
+                            j.vely = -12
+                            j.piso = False
+                            j.accion = 2
+                        #Izquierda
+                        if j.dir == 2:
+                            j.vely = -12
+                            j.piso = False
+                            j.accion = 7
+                    #Salto sin arma
+                    if j.arma == 0:
+                        #Derecha
+                        if j.dir == 1:
+                            j.vely = -12
+                            j.piso = False
+                            j.accion = 6
+                        #Izquierda
+                        if j.dir == 2:
+                            j.vely = -12
+                            j.piso = False
+                            j.accion = 11
+
                 if event.key == pygame.K_s:
                     #Estado de disparo y creacion de bala
                     if j.arma == 1:
                         pos = j.RetPos()
                         b = Bala(pos)
+                        #Derecha
                         if j.dir == 1:
                             b.velx = 15
                             b.vely = 0
-                            #j.accion = 3
+                            j.accion = 3
+                        #Izquierda
                         if j.dir == 2:
                             b.velx = -15
                             b.vely = 0
-                            #j.accion = 7
+                            j.accion = 10
                         balas.add(b)
                     else:
                         print("no tiene arma")
             if event.type == pygame.KEYUP:
-                j.velx = 0
+                #No tiene arma
+                if j.arma == 0:
+                    #Derecha
+                    if j.dir == 1:
+                        j.velx = 0
+                        j.accion = 4
+                    #Izquierda
+                    if j.dir == 2:
+                        j.velx = 0
+                        j.accion = 9
+                #Tiene arma
+                if j.arma == 1:
+                    #derecha
+                    if j.dir == 1:
+                        j.velx = 0
+                        j.accion = 0
+                    #Izquierda
+                    if j.dir == 2:
+                        j.velx = 0
+                        j.accion = 13
 
         #Control movimiento en x jugador con mapa
         if j.rect.x > lim_der:

@@ -1,7 +1,7 @@
 import pygame
 
 def Inicio(ventana):
-    #fondo = pygame.image.load("")
+    fondo = pygame.image.load("MainTitle.jpg")
     fin = False
     reloj = pygame.time.Clock()
     while not fin:
@@ -9,7 +9,8 @@ def Inicio(ventana):
             if event.type == pygame.QUIT:
                 fin = True
             if event.type == pygame.KEYDOWN:
-                fin = True
-        ventana.fill([255,0,0])
+                if event.key == pygame.K_SPACE:
+                    fin = True
+        ventana.blit(fondo,[0,0])
         pygame.display.flip()
         reloj.tick(20)

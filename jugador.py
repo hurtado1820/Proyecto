@@ -2,24 +2,22 @@ import pygame
 from const import *
 
 class Jugador(pygame.sprite.Sprite):
-    def __init__ (self,pos):#m
+    def __init__ (self,pos,m):
         pygame.sprite.Sprite.__init__(self)
-        '''self.accion = 1
+        self.accion = 4
         self.con = 0
         self.animacion = m
-        self.image = self.animacion[self.accion][self.con]'''
-        self.image = pygame.Surface([20,40])
-        self.image.fill(BLANCO)
+        self.image = self.animacion[self.accion][self.con]
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
-        #self.lim = [7,7,2,2,7,7,2,2]
+        self.lim = [3,5,5,4,3,5,5,5,5,3,4,5,5,3]
         self.dir = 1 #1: derecha, 2:izquierda
         self.velx = 0
         self.vely = 0
         self.vidas = 6
         self.aturdido = 0
-        self.arma = 0 
+        self.arma = 0
         self.estado = 1  # 1 estándar, 2 velocidad, 3 con las gemas, 4 aturdido, 5 muerto
         self.muros = None
         self.suelos = None
@@ -27,14 +25,13 @@ class Jugador(pygame.sprite.Sprite):
         self.piso = False #Bandera, gravedad
         self.inventario = [0,0,0,0] #gemas, vidas, velocidad, tiempo
 
-    '''def animar(self):
-        if self.velx != self.vely:
-            if self.con < self.lim[self.accion]:
-                self.con += 1
-            else:
-                self.con = 0
-                self.accion = self.accion
-            self.image = self.animacion[self.accion][self.con]'''
+    def animar(self):
+        if self.con < self.lim[self.accion]:
+            self.con += 1
+        else:
+            self.con = 0
+            self.accion = self.accion
+        self.image = self.animacion[self.con][self.accion]
 
     def gravedad(self):
         if self.vely ==  0:
@@ -125,7 +122,7 @@ class Jugador(pygame.sprite.Sprite):
             self.rect.bottom = ALTO
             self.piso = True'''
 
-        #self.animar()
+        self.animar()
 
     def RetPos(self):
         x = self.rect.x
